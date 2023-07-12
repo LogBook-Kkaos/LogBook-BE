@@ -1,6 +1,6 @@
-package com.logbook.backend.logbookbe.user.repository;
+package com.logbook.backend.logbookbe.domain.user.repository;
 
-import com.logbook.backend.logbookbe.user.model.User;
+import com.logbook.backend.logbookbe.domain.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
