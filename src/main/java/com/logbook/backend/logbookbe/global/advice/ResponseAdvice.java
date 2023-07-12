@@ -1,4 +1,4 @@
-package com.logbook.backend.logbookbe.advice;
+package com.logbook.backend.logbookbe.global.advice;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

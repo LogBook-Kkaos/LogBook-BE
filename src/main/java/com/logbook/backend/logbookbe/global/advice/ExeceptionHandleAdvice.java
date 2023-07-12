@@ -1,4 +1,4 @@
-package com.logbook.backend.logbookbe.advice;
+package com.logbook.backend.logbookbe.global.advice;
 
 import com.logbook.backend.logbookbe.global.error.ErrorCode;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
