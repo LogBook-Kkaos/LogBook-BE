@@ -8,26 +8,16 @@
 ## PR Type
 해당 PR이 포함하는 내용 체크:
 
-- [ ] 패키지
-    - [ ] 패키지 추가
-    - [ ] 패키지 설정 변경
-- [ ] CI
-    - [ ] CI 구성 추가
-    - [ ] CI 설정 변경
-- [ ] 문서화
-    - [ ] 신규 문서 추가
-    - [ ] 기존 문서 변경
-- [ ] 신규 기능 추가
-- [ ] 버그 수정
-- [ ] 코드 개선
-    - [ ] 성능 개선
-    - [ ] UI 개선
-    - [ ] 성능에 영향을 끼치지 않는 수정
-- [ ] 테스트
-    - [ ] 테스트 코드 추가
-    - [ ] 기존 테스트 코드 변경
+<!— Please check the one that applies to this PR using "x". —>
+
+- [ ] 버그수정(Bugfix)
+- [ ] 기능개발(Feature)
+- [ ] 코드 스타일 변경(Code style update) (formatting, local variables)
+- [ ] 리팩토링 (no functional changes, no api changes)
+- [ ] 빌드 관련 변경
+- [ ] 문서 내용 변경
 - [ ] 커밋 되돌리기
-- [ ] 기타
+- [ ] 기타… Please describe:
 
 ## 추가된 점 또는 변경된 점
 
