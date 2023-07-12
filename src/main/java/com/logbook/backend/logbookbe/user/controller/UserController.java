@@ -30,8 +30,8 @@ public class UserController {
         try {
             User savedUser = userService.createUser(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        } catch (Exception e) {
-            logger.error("Error while creating user: {}", e.getMessage());
+        } catch (Exception error) {
+            logger.error("Error while creating user: {}", error.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
