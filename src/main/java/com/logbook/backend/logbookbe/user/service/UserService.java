@@ -2,8 +2,6 @@ package com.logbook.backend.logbookbe.user.service;
 
 import com.logbook.backend.logbookbe.user.model.User;
 import com.logbook.backend.logbookbe.user.repository.UserRepository;
-
-import com.logbook.backend.logbookbe.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
