@@ -1,8 +1,7 @@
-package com.logbook.backend.logbookbe.user.model;
+package com.logbook.backend.logbookbe.domain.user.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;

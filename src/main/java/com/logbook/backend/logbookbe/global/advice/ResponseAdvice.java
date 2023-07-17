@@ -13,6 +13,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ResponseAdvice implements ResponseBodyAdvice<Object> {
+    private static final String API_DOCS_PATH = "/v3/api-docs";
+
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
@@ -20,6 +22,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest req, ServerHttpResponse re) {
+        if (req.getURI().getPath().contains(API_DOCS_PATH)) return body;
         Map<String, Object> updatedResponse = new HashMap<>();
         updatedResponse.put("result", body);
         return updatedResponse;

@@ -1,7 +1,7 @@
-package com.logbook.backend.logbookbe.user.controller;
+package com.logbook.backend.logbookbe.domain.user.controller;
 
-import com.logbook.backend.logbookbe.user.model.User;
-import com.logbook.backend.logbookbe.user.service.UserService;
+import com.logbook.backend.logbookbe.domain.user.model.User;
+import com.logbook.backend.logbookbe.domain.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
