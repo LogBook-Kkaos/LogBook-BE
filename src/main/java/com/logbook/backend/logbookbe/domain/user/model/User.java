@@ -1,26 +1,29 @@
 package com.logbook.backend.logbookbe.domain.user.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.*;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column()
     private String userName;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column()
     private String department;
+
+    @Column(nullable = false)
     private String password;
-    private String jwtToken;
+
 }
