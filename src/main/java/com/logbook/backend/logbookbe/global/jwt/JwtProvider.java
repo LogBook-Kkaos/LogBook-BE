@@ -1,7 +1,6 @@
 package com.logbook.backend.logbookbe.global.jwt;
 
-import com.logbook.backend.logbookbe.global.auth.AuthDetailsService;
-import com.logbook.backend.logbookbe.global.jwt.detail.AuthRole;
+import com.logbook.backend.logbookbe.global.jwt.detail.AuthDetailsService;
 import com.logbook.backend.logbookbe.global.jwt.exception.ExpiredTokenException;
 import com.logbook.backend.logbookbe.global.jwt.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
@@ -20,13 +19,14 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.stream.Collectors;
+
 
 @Component
 public class JwtProvider {
     private final String accessSecret;
     private final String refreshSecret;
     private final AuthDetailsService authDetailsService;
+
     @Autowired
     public JwtProvider(@Value("${jwt.access_secret}") String accessSecret,
                        @Value("${jwt.refresh_secret}") String refreshSecret,
@@ -35,6 +35,7 @@ public class JwtProvider {
         this.refreshSecret = refreshSecret;
         this.authDetailsService = authDetailsService;
     }
+
     public String generateToken(String email, AuthRole role, boolean isRefreshToken) {
         Instant accessDate = LocalDateTime.now().plusHours(6).atZone(ZoneId.systemDefault()).toInstant();
         Instant refreshDate = LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
@@ -45,12 +46,14 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, isRefreshToken ? refreshSecret : accessSecret)
                 .compact();
     }
+
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token, false);
         Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(claims.get("role").toString()));
         UserDetails principal = this.authDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
+
     public void validateToken(String token, boolean isRefreshToken) {
         try {
             parseClaims(token, isRefreshToken);
@@ -60,6 +63,7 @@ public class JwtProvider {
             throw new ExpiredTokenException();
         }
     }
+
     public Claims parseClaims(String accessToken, boolean isRefreshToken) {
         try {
             JwtParser parser = Jwts.parser().setSigningKey(isRefreshToken ? refreshSecret : accessSecret);
