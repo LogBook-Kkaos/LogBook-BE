@@ -21,10 +21,10 @@ public class ExceptionHandleFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (ServiceException e) {
-            sendErrorResponse(response, e.getErrorCode());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ServiceException error) {
+            sendErrorResponse(response, error.getErrorCode());
+        } catch (Exception error) {
+            error.printStackTrace();
             sendErrorResponse(response, ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }

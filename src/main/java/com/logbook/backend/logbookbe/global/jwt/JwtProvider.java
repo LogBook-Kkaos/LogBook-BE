@@ -57,9 +57,9 @@ public class JwtProvider {
     public void validateToken(String token, boolean isRefreshToken) {
         try {
             parseClaims(token, isRefreshToken);
-        } catch (SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
+        } catch (SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException error) {
             throw new InvalidTokenException();
-        } catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException error) {
             throw new ExpiredTokenException();
         }
     }
@@ -68,8 +68,8 @@ public class JwtProvider {
         try {
             JwtParser parser = Jwts.parser().setSigningKey(isRefreshToken ? refreshSecret : accessSecret);
             return parser.parseClaimsJws(accessToken).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
+        } catch (ExpiredJwtException error) {
+            return error.getClaims();
         }
     }
 }
