@@ -1,4 +1,4 @@
-package com.logbook.backend.logbookbe.global.jwt.detail;
+package com.logbook.backend.logbookbe.global.jwt;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

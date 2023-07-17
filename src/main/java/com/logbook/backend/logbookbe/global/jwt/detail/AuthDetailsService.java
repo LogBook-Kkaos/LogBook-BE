@@ -1,7 +1,8 @@
-package com.logbook.backend.logbookbe.global.auth;
+package com.logbook.backend.logbookbe.global.jwt.detail;
 
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
+import com.logbook.backend.logbookbe.global.jwt.detail.AuthDetails;
 import com.logbook.backend.logbookbe.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
