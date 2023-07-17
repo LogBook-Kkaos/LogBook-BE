@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.global.jwt.detail;
 
+import com.logbook.backend.logbookbe.global.jwt.AuthRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
