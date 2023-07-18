@@ -50,7 +50,7 @@ public class UserController {
         return doRefreshToken.execute(refreshToken);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public JwtResponse signup(HttpServletResponse res, @Validated @RequestBody SignupRequest signupRequest) {
         JwtResponse jwt = userSignup.execute(signupRequest.getUserName(), signupRequest.getEmail(), signupRequest.getDepartment(), signupRequest.getPassword());
         Cookie cookie = new Cookie("refreshToken", jwt.getRefreshToken());
