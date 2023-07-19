@@ -1,38 +1,62 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+import com.logbook.backend.logbookbe.domain.user.controller.dto.LoginRequest;
+import com.logbook.backend.logbookbe.domain.user.controller.dto.SignupRequest;
+import com.logbook.backend.logbookbe.domain.user.usecase.RefreshToken;
+import com.logbook.backend.logbookbe.domain.user.usecase.UserSignup;
+import com.logbook.backend.logbookbe.global.jwt.dto.JwtResponse;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.service.UserService;
+import com.logbook.backend.logbookbe.domain.user.usecase.UserLogin;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
-
     @Autowired
     private UserService userService;
 
     // 로거 인스턴스 생성
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PostMapping("/signup")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        // 들어온 User 객체 정보를 로그에 기록
-        logger.info("Received User: {}", user);
+    private final UserLogin userLogin;
+    private final UserSignup userSignup;
+    private final RefreshToken doRefreshToken;
 
-        try {
-            User savedUser = userService.createUser(user);
-            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        } catch (Exception error) {
-            logger.error("Error while creating user: {}", error.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping("/login")
+    public JwtResponse login(HttpServletResponse res, @Validated @RequestBody LoginRequest loginRequest) {
+        JwtResponse jwt = userLogin.execute(loginRequest.getEmail(), loginRequest.getPassword());
+        Cookie cookie = new Cookie("refreshToken", jwt.getRefreshToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        res.addCookie(cookie);
+        return jwt;
+    }
+
+    @PostMapping("/refresh")
+    public JwtResponse refresh(@CookieValue("refreshToken") String refreshToken) {
+        return doRefreshToken.execute(refreshToken);
+    }
+
+    @PostMapping("/register")
+    public JwtResponse signup(HttpServletResponse res, @Validated @RequestBody SignupRequest signupRequest) {
+        JwtResponse jwt = userSignup.execute(signupRequest.getUserName(), signupRequest.getEmail(), signupRequest.getDepartment(), signupRequest.getPassword());
+        Cookie cookie = new Cookie("refreshToken", jwt.getRefreshToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        res.addCookie(cookie);
+        return jwt;
     }
 }
