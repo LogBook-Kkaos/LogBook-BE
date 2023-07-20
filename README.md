@@ -19,6 +19,22 @@ Logbook은 기술 문서를 자동으로 요약하여 릴리즈 노트를 작성
 - 릴리즈 노트 공유 및 관리를 통한 쉬운 협업 가능
 
 
+## 백엔드 기술 스택
+![Static Badge](https://img.shields.io/badge/IntelliJ-%23000000?logo=intellijidea&logoColor=white&link=https%3A%2F%2Fwww.jetbrains.com%2Fidea%2Fdocumentation%2F)
+
+
+![Static Badge](https://img.shields.io/badge/OpenJDK_11-%23FFFFFF?logo=openjdk&logoColor=black&link=https%3A%2F%2Fopenjdk.org%2Fprojects%2Fjdk%2F11%2F)
+![Static Badge](https://img.shields.io/badge/Spring_Boot-%236DB33F?logo=springboot&logoColor=white&link=https%3A%2F%2Fdocs.spring.io%2Fspring-boot%2Fdocs%2F2.x%2Freference%2Fhtml%2F)
+![Static Badge](https://img.shields.io/badge/Spring_Security-%236DB33F?logo=springsecurity&logoColor=white&link=https%3A%2F%2Fdocs.spring.io%2Fspring-security%2Fsite%2Fdocs%2Fcurrent%2Freference%2Fhtml5%2F)
+![Static Badge](https://img.shields.io/badge/JPA-%236DB33F?link=https%3A%2F%2Fdocs.spring.io%2Fspring-data%2Fjpa%2Fdocs%2Fcurrent%2Freference%2Fhtml%2F)
+
+
+![Static Badge](https://img.shields.io/badge/JUnit5-%2325A162?logo=junit5&logoColor=white&link=https%3A%2F%2Fjunit.org%2Fjunit5%2Fdocs%2Fcurrent%2Fuser-guide%2F)
+
+
+![Static Badge](https://img.shields.io/badge/MySQL-%234479A1?logo=mysql&logoColor=white&link=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F8.0%2Fen%2F)
+
+
 ## Environment
 ```dotenv
 # 데이터베이스 연결 정보
