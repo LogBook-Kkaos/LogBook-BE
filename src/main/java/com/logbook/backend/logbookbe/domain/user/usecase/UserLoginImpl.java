@@ -4,6 +4,7 @@ import com.logbook.backend.logbookbe.domain.user.exception.PasswordNotMatchExcep
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
+import com.logbook.backend.logbookbe.global.error.exception.SocialLoginException;
 import com.logbook.backend.logbookbe.global.jwt.JwtProvider;
 import com.logbook.backend.logbookbe.global.jwt.AuthRole;
 import com.logbook.backend.logbookbe.global.jwt.dto.JwtResponse;
@@ -23,6 +24,10 @@ public class UserLoginImpl implements UserLogin {
     public JwtResponse execute(String email, String password) throws UserNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
+
+        if (user.getPassword() == null) {
+            throw new SocialLoginException();
+        }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new PasswordNotMatchException();

@@ -13,7 +13,9 @@ public enum ErrorCode {
 //    Login 관련 Error
     PASSWORD_NOT_MATCH(400, "PASSWORD_NOT_MATCH", "비밀번호가 일치하지 않습니다."),
 //    Signup 관련 Error
-    EMAIL_DUPLICATE(409, "EMAIL_DUPLICATE", "중복된 이메일입니다.");
+    EMAIL_DUPLICATE(409, "EMAIL_DUPLICATE", "중복된 이메일입니다."),
+
+    ONLY_SOCIAL_LOGIN(400, "ONLY_SOCIAL_LOGIN", "소셜로그인으로 가입한 계정입니다.");
 
 
     private final int httpStatus;
