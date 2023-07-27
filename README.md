@@ -45,11 +45,21 @@ DATABASE_PASSWORD=
 # JWT 암호키
 JWT_ACCESS_SECRET=
 JWT_REFRESH_SECRET=
+
+# 소셜로그인 API
+KAKAO_CLIENT_ID=
+KAKAO_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_SECRET=
+NAVER_CLIENT_ID=
+NAVER_SECRET=
 ```
 
 ## 사용법 및 설정
 이 프로젝트를 직접 사용하려면 다음 단계를 따라주세요.
 - 필요한 소프트웨어 설치: Java JDK-11, MySQL 8.0, IntelliJ IDEA
 - 환경변수에서 데이터베이스 연결 정보를 설정합니다.
+- 환경변수에서 JWT 암호키 정보를 설정합니다.
+- 환경변수에서 소셜로그인 API 정보를 설정합니다. 
 - 프로젝트를 빌드한 후, Spring Boot 애플리케이션을 실행하여 백엔드 서버를 시작합니다.
 - IntelliJ IDEA를 사용하여 테스트 코드를 작성하고 코드의 정확성을 확인할 수 있습니다.

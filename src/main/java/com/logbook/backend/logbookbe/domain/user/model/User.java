@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.user.model;
 
+import com.logbook.backend.logbookbe.domain.user.type.Vendor;
 import lombok.*;
 import javax.persistence.*;
 
@@ -13,6 +14,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(columnDefinition = "CHAR(10)")
+    @Enumerated(EnumType.STRING)
+    private Vendor vendor;
 
     @Column()
     private String userName;
