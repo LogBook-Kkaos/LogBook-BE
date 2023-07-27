@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -84,5 +86,15 @@ public class UserController {
         cookie.setSecure(false);
         res.addCookie(cookie);
         return jwt;
+    }
+
+    @Operation(summary = "전체 사용자 조회", description = "모든 사용자 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 }
