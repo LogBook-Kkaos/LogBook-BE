@@ -1,5 +1,7 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+import com.logbook.backend.logbookbe.domain.user.controller.dto.SearchResponse;
+import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,14 +23,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     @Autowired
@@ -84,5 +89,24 @@ public class UserController {
         cookie.setSecure(false);
         res.addCookie(cookie);
         return jwt;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchResponse>> searchSurveys(@RequestParam("keyword") String keyword) {
+        System.out.println("searchSurveys() called");
+        System.out.println("keyword is: " + keyword);
+
+        List<User> users = userService.searchUsers(keyword);
+        List<SearchResponse> searchResults = new ArrayList<>();
+
+        for (User user : users) {
+            SearchResponse searchResult = new SearchResponse();
+            searchResult.setEmail(user.getEmail());
+            searchResult.setUserName(user.getUserName());
+
+            searchResults.add(searchResult);
+        }
+
+        return ResponseEntity.ok(searchResults);
     }
 }
