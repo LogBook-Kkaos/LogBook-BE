@@ -1,6 +1,7 @@
 package com.logbook.backend.logbookbe.global.security;
 
 import com.logbook.backend.logbookbe.global.filter.ExceptionHandleFilter;
+import com.logbook.backend.logbookbe.global.jwt.AuthRole;
 import com.logbook.backend.logbookbe.global.jwt.JwtFilter;
 import com.logbook.backend.logbookbe.global.jwt.JwtProvider;
 import com.logbook.backend.logbookbe.global.oauth.OAuthDetailService;
@@ -45,6 +46,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/user/login").permitAll()
                 .antMatchers("/api/user/refresh").permitAll()
                 .antMatchers("/api/user/register").permitAll()
+                .antMatchers("/api/projects/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
                 .and()
 
