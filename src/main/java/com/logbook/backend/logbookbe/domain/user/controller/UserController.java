@@ -29,7 +29,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     @Autowired
@@ -93,7 +93,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @GetMapping("/users/{user_id}")
+    @GetMapping("/{user_id}")
     public User getUserById(@PathVariable("user_id") Long userId) {
         return userService.getUserById(userId);
     }
