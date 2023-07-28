@@ -5,6 +5,7 @@ import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -91,6 +92,11 @@ public class UserController {
         return jwt;
     }
 
+    @Operation(summary = "사용자 검색", description = "사용자를 키워드로 검색합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SearchResponse.class)))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/search")
     public ResponseEntity<List<SearchResponse>> searchSurveys(@RequestParam("keyword") String keyword) {
         System.out.println("searchSurveys() called");
