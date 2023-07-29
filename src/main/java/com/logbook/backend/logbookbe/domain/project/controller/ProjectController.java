@@ -3,6 +3,7 @@ package com.logbook.backend.logbookbe.domain.project.controller;
 import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
+import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,6 +43,7 @@ public class ProjectController {
     @Operation(summary = "프로젝트 생성", description = "새로운 프로젝트를 생성합니다.")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class)))
     public Project createProject(@RequestBody Project project) {
+        project.setMember_count(1);
         return projectService.createProject(project);
     }
 
@@ -52,9 +54,17 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Project updateProject(@PathVariable("project_id") Integer projectId, @RequestBody Project project) {
-        project.setProject_id(projectId);
-        return projectService.updateProject(project);
+    public Project updateProject(@PathVariable("project_id") Integer projectId, @RequestBody Project updatedProject) {
+        Project existingProject = projectService.getProjectById(projectId);
+        if (existingProject == null) {
+            throw new UserNotFoundException();
+        }
+
+        existingProject.setProject_name(updatedProject.getProject_name());
+        existingProject.setProject_description(updatedProject.getProject_description());
+        existingProject.setIs_public(updatedProject.getIs_public());
+
+        return projectService.updateProject(existingProject);
     }
 
     @DeleteMapping("/{project_id}")
