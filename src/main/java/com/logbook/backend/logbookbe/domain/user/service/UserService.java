@@ -18,7 +18,15 @@ public class UserService {
         if (existingUser != null) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
+        return userRepository.save(user);
+    }
 
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+    }
+
+    public User updateUser(User user) {
         return userRepository.save(user);
     }
 }

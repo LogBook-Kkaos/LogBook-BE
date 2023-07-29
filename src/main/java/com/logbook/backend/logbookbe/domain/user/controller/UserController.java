@@ -1,5 +1,8 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+
+import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
+import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -84,5 +87,26 @@ public class UserController {
         cookie.setSecure(false);
         res.addCookie(cookie);
         return jwt;
+    }
+
+    @PutMapping("/{user_id}")
+    @Operation(summary = "사용자 수정", description = "기존 사용자 정보를 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public User updateUser(@PathVariable("user_id") Long userId, @RequestBody User updatedUser) {
+        User existingUser = userService.getUserById(userId);
+        if (existingUser == null) {
+            throw new UserNotFoundException();
+        }
+
+        existingUser.setUserName(updatedUser.getUserName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setDepartment(updatedUser.getDepartment());
+        existingUser.setPassword(updatedUser.getPassword());
+
+        return userService.updateUser(existingUser);
     }
 }
