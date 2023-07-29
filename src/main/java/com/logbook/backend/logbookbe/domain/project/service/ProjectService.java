@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.project.service;
 
+import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public void deleteProject(Integer projectId) {
+    public DeleteResponse deleteProject(Integer projectId) {
         projectRepository.deleteById(projectId);
+        return new DeleteResponse(projectId, "Project deleted successfully");
     }
 }

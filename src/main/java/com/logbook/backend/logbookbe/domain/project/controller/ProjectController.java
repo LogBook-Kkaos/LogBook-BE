@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.project.controller;
 
+import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
@@ -63,7 +64,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public void deleteProject(@PathVariable("project_id") Integer projectId) {
-        projectService.deleteProject(projectId);
+    public DeleteResponse deleteProject(@PathVariable("project_id") Integer projectId) {
+        return projectService.deleteProject(projectId);
     }
 }
