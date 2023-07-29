@@ -1,6 +1,7 @@
 package com.logbook.backend.logbookbe.global.security;
 
 import com.logbook.backend.logbookbe.global.filter.ExceptionHandleFilter;
+import com.logbook.backend.logbookbe.global.jwt.AuthRole;
 import com.logbook.backend.logbookbe.global.jwt.JwtFilter;
 import com.logbook.backend.logbookbe.global.jwt.JwtProvider;
 import com.logbook.backend.logbookbe.global.oauth.OAuthDetailService;
@@ -42,9 +43,10 @@ public class WebSecurityConfig {
                 .requestMatchers(CorsUtils::isCorsRequest).permitAll()
 
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                .antMatchers("/api/user/login").permitAll()
-                .antMatchers("/api/user/refresh").permitAll()
-                .antMatchers("/api/user/register").permitAll()
+                .antMatchers("/api/users/login").permitAll()
+                .antMatchers("/api/users/refresh").permitAll()
+                .antMatchers("/api/users/register").permitAll()
+                .antMatchers("/api/users/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
                 .and()
 
