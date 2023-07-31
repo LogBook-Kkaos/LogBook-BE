@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+import com.logbook.backend.logbookbe.domain.user.controller.dto.UserInfoResponse;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -94,7 +95,13 @@ public class UserController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{user_id}")
-    public User getUserById(@PathVariable("user_id") Long userId) {
-        return userService.getUserById(userId);
+    public UserInfoResponse getUserById(@PathVariable("user_id") Long userId) {
+        User user = userService.getUserById(userId);
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        userInfoResponse.setUserName(user.getUserName());
+        userInfoResponse.setEmail(user.getEmail());
+        userInfoResponse.setDepartment(user.getDepartment());
+
+        return userInfoResponse;
     }
 }
