@@ -1,6 +1,7 @@
 package com.logbook.backend.logbookbe.global.security;
 
 import com.logbook.backend.logbookbe.global.filter.ExceptionHandleFilter;
+import com.logbook.backend.logbookbe.global.jwt.AuthRole;
 import com.logbook.backend.logbookbe.global.jwt.JwtFilter;
 import com.logbook.backend.logbookbe.global.jwt.JwtProvider;
 import com.logbook.backend.logbookbe.global.oauth.OAuthDetailService;
@@ -46,10 +47,11 @@ public class WebSecurityConfig {
                 .antMatchers("/api/users/refresh").permitAll()
                 .antMatchers("/api/users/register").permitAll()
                 .antMatchers("/api/users/logout").permitAll()
-
+                .antMatchers("/api/users/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
+          
                 //로그인 접근관리 끝나면 search 뺄것
                 .antMatchers("/api/users/search").permitAll()
-          
+      
                 .anyRequest().authenticated()
                 .and()
 
