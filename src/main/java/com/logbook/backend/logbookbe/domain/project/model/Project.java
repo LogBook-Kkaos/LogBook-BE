@@ -13,17 +13,20 @@ import javax.persistence.*;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="project_id")
     private Integer projectId;
 
-    @Column(nullable = false)
+    @Column(name="project_title", nullable = false)
     private String projectName;
 
     @Lob
+    @Column(name="project_description")
     private String projectDescription;
 
-    @Column(nullable = false)
+    @Column(name="is_public", nullable = false)
     private boolean isPublic;
 
+    @Column(name="member_count")
     private Integer memberCount;
 
     public void setIsPublic(boolean isPublic) {
