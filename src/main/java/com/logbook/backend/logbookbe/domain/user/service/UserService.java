@@ -38,4 +38,8 @@ public class UserService {
     public List<User> searchUsers(String email) {
         return userRepository.findByEmailContaining(email);
     }
+
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
+    }
 }
