@@ -1,6 +1,7 @@
 package com.logbook.backend.logbookbe.domain.project.controller;
 
 import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
+import com.logbook.backend.logbookbe.domain.project.controller.dto.PublicProjectResponse;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,8 +26,20 @@ public class ProjectController {
 
     @GetMapping
     @Operation(summary = "모든 프로젝트 목록 조회", description = "모든 프로젝트의 목록을 조회합니다.")
-    public List<Project> getAllProjects() {
-        return projectService.getAllProjects();
+    public List<PublicProjectResponse> getAllProjects() {
+        List<Project> projects = projectService.getAllProjects();
+        List<PublicProjectResponse> projectResponses = new ArrayList<>();
+
+        for (Project project : projects) {
+            if (project.isPublic()) {
+                PublicProjectResponse projectResponse = new PublicProjectResponse();
+                projectResponse.setProjectName(project.getProjectName());
+                projectResponse.setProjectDescription(project.getProjectDescription());
+
+                projectResponses.add(projectResponse);
+            }
+        }
+        return projectResponses;
     }
 
     @GetMapping("/{projectId}")
