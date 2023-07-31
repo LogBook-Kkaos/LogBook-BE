@@ -12,23 +12,24 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class User {
     @Id
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "CHAR(10)")
+    @Column(name="vendor", columnDefinition = "CHAR(10)")
     @Enumerated(EnumType.STRING)
     private Vendor vendor;
 
-    @Column()
+    @Column(name="user_name")
     private String userName;
 
-    @Column(nullable = false)
+    @Column(name="email", nullable = false)
     private String email;
 
-    @Column()
+    @Column(name="department")
     private String department;
 
-    @Column(nullable = false)
+    @Column(name="password", nullable = false)
     private String password;
 
 }
