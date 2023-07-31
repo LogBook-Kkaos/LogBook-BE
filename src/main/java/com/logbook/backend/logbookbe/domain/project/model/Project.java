@@ -22,7 +22,11 @@ public class Project {
     private String projectDescription;
 
     @Column(nullable = false)
-    private short isPublic;
+    private boolean isPublic;
 
     private Integer memberCount;
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
 }
