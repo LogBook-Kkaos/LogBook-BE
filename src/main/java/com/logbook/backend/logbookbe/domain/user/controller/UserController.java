@@ -1,7 +1,10 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+import com.logbook.backend.logbookbe.domain.auth.usecase.AddTokenToBlackList;
+
 import com.logbook.backend.logbookbe.domain.user.controller.dto.SearchResponse;
 import com.logbook.backend.logbookbe.domain.user.model.User;
+
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,6 +49,7 @@ public class UserController {
     private final UserLogin userLogin;
     private final UserSignup userSignup;
     private final RefreshToken doRefreshToken;
+    private final AddTokenToBlackList addTokenToBlackList;
 
     @Operation(summary = "사용자 로그인", description = "사용자 계정으로 로그인합니다. RefreshToken은 Cookie에 자동으로 추가됩니다.")
     @ApiResponses({
@@ -91,6 +95,23 @@ public class UserController {
         res.addCookie(cookie);
         return jwt;
     }
+
+
+    @Operation(summary = "사용자 로그아웃", description = "쿠키에 저장된 RefreshToken을 삭제하고 로그아웃 처리합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @DeleteMapping("/logout")
+    public boolean logout(@Parameter(hidden = true) @CookieValue("refreshToken") String oldToken, HttpServletResponse res) {
+        addTokenToBlackList.execute(oldToken);
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setMaxAge(0);
+        res.addCookie(cookie);
+        return true;
 
     @Operation(summary = "사용자 검색", description = "사용자를 키워드로 검색합니다.")
     @ApiResponses({
