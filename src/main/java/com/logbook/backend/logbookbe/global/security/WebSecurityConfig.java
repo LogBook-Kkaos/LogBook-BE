@@ -51,7 +51,7 @@ public class WebSecurityConfig {
           
                 //로그인 접근관리 끝나면 search 뺄것
                 .antMatchers("/api/users/search").permitAll()
-      
+
                 .anyRequest().authenticated()
                 .and()
 

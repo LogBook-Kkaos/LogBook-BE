@@ -1,12 +1,11 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+
+import com.logbook.backend.logbookbe.domain.user.controller.dto.UserInfoResponse;
 import com.logbook.backend.logbookbe.domain.user.controller.dto.SearchResponse;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.user.model.User;
-
 import com.logbook.backend.logbookbe.domain.auth.usecase.AddTokenToBlackList;
-
-import com.logbook.backend.logbookbe.domain.user.controller.dto.SearchResponse;
 
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,6 +98,23 @@ public class UserController {
         return jwt;
     }
 
+    @Operation(summary = "사용자 로그아웃", description = "쿠키에 저장된 RefreshToken을 삭제하고 로그아웃 처리합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @DeleteMapping("/logout")
+    public boolean logout(@Parameter(hidden = true) @CookieValue("refreshToken") String oldToken, HttpServletResponse res) {
+        addTokenToBlackList.execute(oldToken);
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setMaxAge(0);
+        res.addCookie(cookie);
+        return true;
+    }
+  
     @PutMapping("/{user_id}")
     @Operation(summary = "사용자 수정", description = "기존 사용자 정보를 수정합니다.")
     @ApiResponses({
@@ -119,24 +135,44 @@ public class UserController {
 
         return userService.updateUser(existingUser);
     }
-
-    @Operation(summary = "사용자 로그아웃", description = "쿠키에 저장된 RefreshToken을 삭제하고 로그아웃 처리합니다.")
+  
+    @Operation(summary = "전체 사용자 조회", description = "모든 사용자 정보를 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200"),
-            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @DeleteMapping("/logout")
-    public boolean logout(@Parameter(hidden = true) @CookieValue("refreshToken") String oldToken, HttpServletResponse res) {
-        addTokenToBlackList.execute(oldToken);
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setMaxAge(0);
-        res.addCookie(cookie);
-        return true;
+    @GetMapping
+    public List<SearchResponse> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        List<SearchResponse> searchResults = new ArrayList<>();
+
+        for (User user : users) {
+            SearchResponse searchResult = new SearchResponse();
+            searchResult.setEmail(user.getEmail());
+            searchResult.setUserName(user.getUserName());
+
+            searchResults.add(searchResult);
+        }
+        return searchResults;
     }
-      
+  
+    @Operation(summary = "사용자 상세 조회", description = "특정 사용자의 상세 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/{user_id}")
+    public UserInfoResponse getUserById(@PathVariable("user_id") Long userId) {
+        User user = userService.getUserById(userId);
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        userInfoResponse.setUserName(user.getUserName());
+        userInfoResponse.setEmail(user.getEmail());
+        userInfoResponse.setDepartment(user.getDepartment());
+
+        return userInfoResponse;
+    }
+
     @Operation(summary = "사용자 검색", description = "사용자를 키워드로 검색합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SearchResponse.class)))),
@@ -157,25 +193,5 @@ public class UserController {
             searchResults.add(searchResult);
         }
         return ResponseEntity.ok(searchResults);
-    }
-
-    @Operation(summary = "전체 사용자 조회", description = "모든 사용자 정보를 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
-            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping
-    public List<SearchResponse> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        List<SearchResponse> searchResults = new ArrayList<>();
-
-        for (User user : users) {
-            SearchResponse searchResult = new SearchResponse();
-            searchResult.setEmail(user.getEmail());
-            searchResult.setUserName(user.getUserName());
-
-            searchResults.add(searchResult);
-        }
-        return searchResults;
     }
 }
