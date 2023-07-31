@@ -25,8 +25,7 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) {
-        project.setMember_count(1);
-        project.setStatus("할일");
+        project.setMemberCount(1);
         return projectRepository.save(project);
     }
 

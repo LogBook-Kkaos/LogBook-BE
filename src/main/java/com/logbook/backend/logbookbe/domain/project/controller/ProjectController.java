@@ -28,14 +28,14 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
-    @GetMapping("/{project_id}")
+    @GetMapping("/{projectId}")
     @Operation(summary = "프로젝트 상세 조회", description = "특정 프로젝트의 상세 정보를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Project getProjectById(@PathVariable("project_id") Integer projectId) {
+    public Project getProjectById(@PathVariable("projectId") Integer projectId) {
         return projectService.getProjectById(projectId);
     }
 
@@ -43,38 +43,38 @@ public class ProjectController {
     @Operation(summary = "프로젝트 생성", description = "새로운 프로젝트를 생성합니다.")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class)))
     public Project createProject(@RequestBody Project project) {
-        project.setMember_count(1);
+        project.setMemberCount(1);
         return projectService.createProject(project);
     }
 
-    @PutMapping("/{project_id}")
+    @PutMapping("/{projectId}")
     @Operation(summary = "프로젝트 수정", description = "기존 프로젝트를 수정합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Project updateProject(@PathVariable("project_id") Integer projectId, @RequestBody Project updatedProject) {
+    public Project updateProject(@PathVariable("projectId") Integer projectId, @RequestBody Project updatedProject) {
         Project existingProject = projectService.getProjectById(projectId);
         if (existingProject == null) {
             throw new UserNotFoundException();
         }
 
-        existingProject.setProject_name(updatedProject.getProject_name());
-        existingProject.setProject_description(updatedProject.getProject_description());
-        existingProject.setIs_public(updatedProject.getIs_public());
+        existingProject.setProjectName(updatedProject.getProjectName());
+        existingProject.setProjectDescription(updatedProject.getProjectDescription());
+        existingProject.setIsPublic(updatedProject.getIsPublic());
 
         return projectService.updateProject(existingProject);
     }
 
-    @DeleteMapping("/{project_id}")
+    @DeleteMapping("/{projectId}")
     @Operation(summary = "프로젝트 삭제", description = "특정 프로젝트를 삭제합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public DeleteResponse deleteProject(@PathVariable("project_id") Integer projectId) {
+    public DeleteResponse deleteProject(@PathVariable("projectId") Integer projectId) {
         return projectService.deleteProject(projectId);
     }
 }

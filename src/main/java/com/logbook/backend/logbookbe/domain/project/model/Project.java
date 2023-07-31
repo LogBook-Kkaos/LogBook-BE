@@ -13,19 +13,16 @@ import javax.persistence.*;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer project_id;
+    private Integer projectId;
 
     @Column(nullable = false)
-    private String project_name;
+    private String projectName;
 
     @Lob
-    private String project_description;
+    private String projectDescription;
 
     @Column(nullable = false)
-    private short is_public;
+    private short isPublic;
 
-    @Column(nullable = false)
-    private String status;
-
-    private Integer member_count;
+    private Integer memberCount;
 }

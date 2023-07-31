@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeleteResponse {
-    private Integer project_id;
+    private Integer projectId;
     private String message;
 }
