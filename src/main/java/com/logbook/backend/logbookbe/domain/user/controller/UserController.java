@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+import com.logbook.backend.logbookbe.domain.user.controller.dto.SearchResponse;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 
@@ -117,7 +118,7 @@ public class UserController {
         existingUser.setPassword(updatedUser.getPassword());
 
         return userService.updateUser(existingUser);
-
+    }
 
     @Operation(summary = "사용자 로그아웃", description = "쿠키에 저장된 RefreshToken을 삭제하고 로그아웃 처리합니다.")
     @ApiResponses({
@@ -134,7 +135,8 @@ public class UserController {
         cookie.setMaxAge(0);
         res.addCookie(cookie);
         return true;
-
+    }
+      
     @Operation(summary = "사용자 검색", description = "사용자를 키워드로 검색합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SearchResponse.class)))),
@@ -152,10 +154,28 @@ public class UserController {
             SearchResponse searchResult = new SearchResponse();
             searchResult.setEmail(user.getEmail());
             searchResult.setUserName(user.getUserName());
+            searchResults.add(searchResult);
+        }
+        return ResponseEntity.ok(searchResults);
+    }
+
+    @Operation(summary = "전체 사용자 조회", description = "모든 사용자 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping
+    public List<SearchResponse> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        List<SearchResponse> searchResults = new ArrayList<>();
+
+        for (User user : users) {
+            SearchResponse searchResult = new SearchResponse();
+            searchResult.setEmail(user.getEmail());
+            searchResult.setUserName(user.getUserName());
 
             searchResults.add(searchResult);
         }
-
-        return ResponseEntity.ok(searchResults);
+        return searchResults;
     }
 }
