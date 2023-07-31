@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
+import com.logbook.backend.logbookbe.domain.user.controller.dto.SearchResponse;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -94,7 +96,18 @@ public class UserController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<SearchResponse> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        List<SearchResponse> searchResults = new ArrayList<>();
+
+        for (User user : users) {
+            SearchResponse searchResult = new SearchResponse();
+            searchResult.setEmail(user.getEmail());
+            searchResult.setUserName(user.getUserName());
+
+            searchResults.add(searchResult);
+        }
+
+        return searchResults;
     }
 }
