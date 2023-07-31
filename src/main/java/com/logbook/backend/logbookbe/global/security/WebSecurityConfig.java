@@ -47,7 +47,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/users/refresh").permitAll()
                 .antMatchers("/api/users/register").permitAll()
 
-                .antMatchers("/api/users/users/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
+                .antMatchers("/api/users/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
 
                 .anyRequest().authenticated()
                 .and()
