@@ -43,10 +43,10 @@ public class WebSecurityConfig {
                 .requestMatchers(CorsUtils::isCorsRequest).permitAll()
 
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                .antMatchers("/api/user/login").permitAll()
-                .antMatchers("/api/user/refresh").permitAll()
-                .antMatchers("/api/user/register").permitAll()
-                .antMatchers("/api/user/users").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
+                .antMatchers("/api/users/login").permitAll()
+                .antMatchers("/api/users/refresh").permitAll()
+                .antMatchers("/api/users/register").permitAll()
+                .antMatchers("/api/users/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
 
                 .anyRequest().authenticated()
                 .and()
