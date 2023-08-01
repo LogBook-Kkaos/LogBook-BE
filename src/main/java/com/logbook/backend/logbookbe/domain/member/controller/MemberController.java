@@ -7,12 +7,13 @@ import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
-import com.logbook.backend.logbookbe.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.logbook.backend.logbookbe.domain.member.exception.MemberNotFoundException;
+import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
+import com.logbook.backend.logbookbe.domain.project.exception.ProjectNotFoundException;
 
 @RestController
 @RequestMapping("/api/members")
@@ -35,9 +36,9 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Member> createMember(@RequestBody Member member) {
         Project project = projectRepository.findById(member.getProject().getProjectId())
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         User user = userRepository.findById(member.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         member.setProject(project);
         member.setUser(user);
@@ -50,7 +51,7 @@ public class MemberController {
     public ResponseEntity<Member> getMember(@PathVariable Long memberId) {
         return memberRepository.findById(memberId)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     @PutMapping("/{memberId}")
@@ -82,11 +83,10 @@ public class MemberController {
 
     @DeleteMapping("/{memberId}")
     public ResponseEntity<Object> deleteMember(@PathVariable Long memberId) {
-        return memberRepository.findById(memberId)
-                .map(existingMember -> {
-                    memberRepository.delete(existingMember);
-                    return ResponseEntity.ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Member existingMember = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        memberRepository.delete(existingMember);
+        return ResponseEntity.ok().build();
     }
 }
