@@ -1,5 +1,7 @@
 package com.logbook.backend.logbookbe.domain.member.model;
 
+import com.logbook.backend.logbookbe.domain.project.model.Project;
+import com.logbook.backend.logbookbe.domain.user.model.User;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,19 +15,23 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Member {
     @Id
-    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long member_id;
+    @Column(name="member_id")
+    private Long memberId;
 
-    @Column(nullable = false)
-    private int permission_level;
+    @Column(name="permission_level", nullable = false)
+    private String permissionLevel;
 
-    @Column(nullable = false)
-    private int project_id;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
-    @Column(nullable = false)
+    @Column(name="role", nullable = false)
     private String role;
 
-    @Column(nullable = false)
-    private int user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
+
+
