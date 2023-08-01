@@ -7,8 +7,4 @@ public class MemberAlreadyExistsException extends ServiceException {
     public MemberAlreadyExistsException() {
         super(ErrorCode.MEMBER_ALREADY_EXISTS);
     }
-
-//    public MemberAlreadyExistsException(String message) {
-//        super(ErrorCode.MEMBER_ALREADY_EXISTS, message);
-//    }
 }
