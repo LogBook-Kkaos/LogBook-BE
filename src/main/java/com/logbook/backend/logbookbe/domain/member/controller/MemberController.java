@@ -10,12 +10,15 @@ import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import com.logbook.backend.logbookbe.domain.member.exception.MemberNotFoundException;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.project.exception.ProjectNotFoundException;
