@@ -1,5 +1,7 @@
 package com.logbook.backend.logbookbe.domain.member.controller;
 
+import com.logbook.backend.logbookbe.domain.member.controller.dto.EditMemberResponse;
+import com.logbook.backend.logbookbe.domain.member.controller.dto.MemberResponse;
 import com.logbook.backend.logbookbe.domain.member.exception.MemberAlreadyExistsException;
 import com.logbook.backend.logbookbe.domain.member.exception.MemberUpdateException;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
@@ -49,7 +51,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<Member> createMember(@RequestBody Member member) {
+    public ResponseEntity<MemberResponse> createMember(@RequestBody Member member) {
         Project project = projectRepository.findById(member.getProject().getProjectId())
                 .orElseThrow(ProjectNotFoundException::new);
         User user = userRepository.findById(member.getUser().getId())
@@ -63,7 +65,7 @@ public class MemberController {
         member.setUser(user);
 
         Member savedMember = memberRepository.save(member);
-        return ResponseEntity.ok(savedMember);
+        return ResponseEntity.ok(new MemberResponse(Math.toIntExact(savedMember.getMemberId()), "success"));
     }
 
     @Operation(summary = "멤버 상세 가져오기", description = "특정 멤버의 상세 정보를 가져옵니다.")
@@ -73,9 +75,15 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{memberId}")
-    public ResponseEntity<Member> getMember(@PathVariable Long memberId) {
+    public ResponseEntity<EditMemberResponse> getMember(@PathVariable Long memberId) {
         return memberRepository.findById(memberId)
-                .map(ResponseEntity::ok)
+                .map(existingMember -> {
+                    EditMemberResponse editMemberResponse = new EditMemberResponse();
+                    editMemberResponse.setMemberId(Math.toIntExact(existingMember.getMemberId()));
+                    editMemberResponse.setPermissionLevel(existingMember.getPermissionLevel());
+                    editMemberResponse.setRole(existingMember.getRole());
+                    return ResponseEntity.ok(editMemberResponse);
+                })
                 .orElseThrow(MemberNotFoundException::new);
     }
 
@@ -86,7 +94,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PutMapping("/{memberId}")
-    public ResponseEntity<Member> updateMember(@PathVariable Long memberId, @RequestBody Member updatedMember) {
+    public ResponseEntity<MemberResponse> updateMember(@PathVariable Long memberId, @RequestBody Member updatedMember) {
         return memberRepository.findById(memberId)
                 .map(existingMember -> {
                     if (updatedMember.getPermissionLevel() != null) {
@@ -107,7 +115,8 @@ public class MemberController {
                             existingMember.setUser(user);
                         }
                     }
-                    return ResponseEntity.ok(memberRepository.save(existingMember));
+                    memberRepository.save(existingMember);
+                    return ResponseEntity.ok(new MemberResponse(Math.toIntExact(existingMember.getMemberId()), "success"));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -119,11 +128,11 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<Object> deleteMember(@PathVariable Long memberId) {
+    public ResponseEntity<MemberResponse> deleteMember(@PathVariable Long memberId) {
         Member existingMember = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
         memberRepository.delete(existingMember);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new MemberResponse(Math.toIntExact(existingMember.getMemberId()), "success"));
     }
 }
