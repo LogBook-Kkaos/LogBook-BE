@@ -37,7 +37,14 @@ public class MemberController {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
     }
-    
+
+    @Operation(summary = "멤버 생성", description = "멤버를 생성합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Member.class))),
+            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping
     public ResponseEntity<Member> createMember(@RequestBody Member member) {
         Project project = projectRepository.findById(member.getProject().getProjectId())
@@ -56,7 +63,12 @@ public class MemberController {
         return ResponseEntity.ok(savedMember);
     }
 
-
+    @Operation(summary = "멤버 상세 가져오기", description = "특정 멤버의 상세 정보를 가져옵니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Member.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/{memberId}")
     public ResponseEntity<Member> getMember(@PathVariable Long memberId) {
         return memberRepository.findById(memberId)
@@ -64,6 +76,12 @@ public class MemberController {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
+    @Operation(summary = "멤버 업데이트", description = "기존 멤버 정보를 업데이트합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Member.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PutMapping("/{memberId}")
     public ResponseEntity<Member> updateMember(@PathVariable Long memberId, @RequestBody Member updatedMember) {
         return memberRepository.findById(memberId)
@@ -91,6 +109,12 @@ public class MemberController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "멤버 삭제", description = "특정 멤버를 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Object.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @DeleteMapping("/{memberId}")
     public ResponseEntity<Object> deleteMember(@PathVariable Long memberId) {
         Member existingMember = memberRepository.findById(memberId)
