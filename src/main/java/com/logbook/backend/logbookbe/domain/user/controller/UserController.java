@@ -1,8 +1,7 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
 
-import com.logbook.backend.logbookbe.domain.user.controller.dto.UserInfoResponse;
-import com.logbook.backend.logbookbe.domain.user.controller.dto.SearchResponse;
+import com.logbook.backend.logbookbe.domain.user.controller.dto.*;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.auth.usecase.AddTokenToBlackList;
@@ -16,8 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-import com.logbook.backend.logbookbe.domain.user.controller.dto.LoginRequest;
-import com.logbook.backend.logbookbe.domain.user.controller.dto.SignupRequest;
 import com.logbook.backend.logbookbe.domain.user.usecase.RefreshToken;
 import com.logbook.backend.logbookbe.domain.user.usecase.UserSignup;
 import com.logbook.backend.logbookbe.global.jwt.dto.JwtResponse;
@@ -193,5 +190,21 @@ public class UserController {
             searchResults.add(searchResult);
         }
         return ResponseEntity.ok(searchResults);
+    }
+
+    @DeleteMapping("/{user_id}")
+    @Operation(summary = "사용자 삭제", description = "특정 사용자를 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = DeleteResponse.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public DeleteResponse deleteUser(@PathVariable("user_id") Long userId) {
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        userService.deleteUser(userId);
+        return new DeleteResponse(userId, "User deleted successfully");
     }
 }
