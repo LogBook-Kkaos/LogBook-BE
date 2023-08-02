@@ -1,7 +1,10 @@
+
 package com.logbook.backend.logbookbe.domain.issue.service;
 
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.IssueDeleteResponse;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.repository.IssueRepository;
+import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,7 +22,7 @@ public class IssueService {
     private ProjectRepository projectRepository;
 
     public List<Issue> getAllIssues(Integer projectId) {
-        return issueRepository.findByProjectId(projectId);
+        return issueRepository.findByProjectProjectId(projectId);
     }
 
     public Issue getIssueById(Integer issueId) {
@@ -48,13 +51,13 @@ public class IssueService {
                 .orElseThrow(() -> new NoSuchElementException("해당하는 이슈를 찾을 수 없습니다."));
     }
 
-    public void deleteIssue(Integer issueId) {
+    public IssueDeleteResponse deleteIssue(Integer issueId) {
         issueRepository.deleteById(issueId);
+        return new IssueDeleteResponse(issueId, "프로젝트가 성공적으로 삭제되었습니다.");
     }
 
-
     public List<Issue> filterIssues(Integer projectId, Integer assigneeId, String status) {
-        List<Issue> issues = issueRepository.findByProjectId(projectId);
+        List<Issue> issues = issueRepository.findByProjectProjectId(projectId);
 
         if (assigneeId != null) {
             issues = issues.stream()

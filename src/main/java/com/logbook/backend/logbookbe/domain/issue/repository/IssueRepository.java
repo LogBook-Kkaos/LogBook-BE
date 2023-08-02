@@ -1,3 +1,4 @@
+
 package com.logbook.backend.logbookbe.domain.issue.repository;
 
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
@@ -8,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Integer> {
-    List<Issue> findByProjectId(Integer projectId);
+    List<Issue> findByProjectProjectId(Integer projectId);
 
 }
