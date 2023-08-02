@@ -128,18 +128,7 @@ public class MemberController {
                     if (updatedMember.getRole() != null) {
                         existingMember.setRole(updatedMember.getRole());
                     }
-                    if (updatedMember.getProject() != null) {
-                        Project project = updatedMember.getProject();
-                        if (project.getProjectId() != null) {
-                            existingMember.setProject(project);
-                        }
-                    }
-                    if (updatedMember.getUser() != null) {
-                        User user = updatedMember.getUser();
-                        if (user.getId() != null) {
-                            existingMember.setUser(user);
-                        }
-                    }
+                   
                     memberRepository.save(existingMember);
                     return ResponseEntity.ok(new MemberResponse(Math.toIntExact(existingMember.getMemberId()), "success"));
                 })
