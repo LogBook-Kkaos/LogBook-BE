@@ -57,7 +57,6 @@ public class ProjectController {
     @Operation(summary = "프로젝트 생성", description = "새로운 프로젝트를 생성합니다.")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class)))
     public Project createProject(@RequestBody Project project) {
-        project.setMemberCount(1);
         return projectService.createProject(project);
     }
 
