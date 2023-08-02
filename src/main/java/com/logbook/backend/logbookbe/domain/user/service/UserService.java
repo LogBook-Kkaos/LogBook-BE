@@ -43,3 +43,9 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("해당하는 사용자 이메일이 없습니다."));
+    }
+}

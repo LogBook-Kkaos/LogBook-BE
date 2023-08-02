@@ -33,7 +33,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -58,14 +61,24 @@ public class UserController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/login")
-    public JwtResponse login(HttpServletResponse res, @Validated @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(HttpServletResponse res, @Validated @RequestBody LoginRequest loginRequest) {
         JwtResponse jwt = userLogin.execute(loginRequest.getEmail(), loginRequest.getPassword());
         Cookie cookie = new Cookie("refreshToken", jwt.getRefreshToken());
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
         res.addCookie(cookie);
-        return jwt;
+
+        User user = userService.findUserByEmail(loginRequest.getEmail());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userName", user.getUserName());
+        response.put("email", user.getEmail());
+        response.put("department", user.getDepartment());
+        response.put("jwt", jwt);
+
+        return ResponseEntity.ok(response);
     }
+
 
     @Operation(summary = "사용자 토큰갱신", description = "AccessToken을 갱신합니다. 이 때 Cookie에 있는 RefreshToken을 자동으로 가져와 사용합니다.")
     @ApiResponses({
