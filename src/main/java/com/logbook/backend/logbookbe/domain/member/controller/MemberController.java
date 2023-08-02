@@ -26,7 +26,7 @@ import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException
 import com.logbook.backend.logbookbe.domain.project.exception.ProjectNotFoundException;
 
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/api/projects/{project_id}/members")
 public class MemberController {
     @Autowired
     private MemberService memberService;
