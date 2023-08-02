@@ -23,7 +23,7 @@ public class Member {
     private String permissionLevel;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @Column(name="role", nullable = false)
