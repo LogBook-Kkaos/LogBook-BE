@@ -47,8 +47,6 @@ public class WebSecurityConfig {
                 .antMatchers("/api/users/refresh").permitAll()
                 .antMatchers("/api/users/register").permitAll()
                 .antMatchers("/api/users/logout").permitAll()
-
-                .antMatchers("/api/members/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
                 .antMatchers("/api/users/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
                 .antMatchers("/api/projects/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
 
