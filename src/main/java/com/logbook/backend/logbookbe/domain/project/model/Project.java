@@ -1,8 +1,11 @@
 package com.logbook.backend.logbookbe.domain.project.model;
 
+import com.logbook.backend.logbookbe.domain.document.model.Document;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,7 +32,8 @@ public class Project {
     @Column(name="member_count")
     private Integer memberCount;
 
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-    }
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Document> documents = new ArrayList<>();
+
+
 }
