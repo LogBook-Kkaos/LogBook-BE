@@ -3,6 +3,7 @@ package com.logbook.backend.logbookbe.domain.issue.controller;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.IssueDeleteResponse;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.service.IssueService;
+import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,7 +88,7 @@ public class IssueController {
     public List<Issue> filterIssues(
             @PathVariable Integer projectId,
             @RequestParam(required = false) Integer assignee,
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = false) Status status) {
         return issueService.filterIssues(projectId, assignee, status);
     }
 

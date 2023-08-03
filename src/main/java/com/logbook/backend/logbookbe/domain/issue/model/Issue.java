@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.issue.model;
 
+import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class Issue {
     private String issueTitle;
     @Column(name = "issue_description")
     private String issueDescription;
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private Status status;
 }
