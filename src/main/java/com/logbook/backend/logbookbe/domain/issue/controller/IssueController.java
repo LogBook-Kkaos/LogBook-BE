@@ -79,7 +79,7 @@ public class IssueController {
     }
 
     @GetMapping("/filter")
-    @Operation(summary = "이슈 필터링", description = "이슈를 필터링합니다.")@ApiResponses({
+    @Operation(summary = "이슈 필터링", description = "담당자와 상태를 기준으로 이슈를 필터링합니다.")@ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Issue.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
