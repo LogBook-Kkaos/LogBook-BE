@@ -53,7 +53,7 @@ public class IssueService {
 
     public IssueDeleteResponse deleteIssue(Integer issueId) {
         issueRepository.deleteById(issueId);
-        return new IssueDeleteResponse(issueId, "프로젝트가 성공적으로 삭제되었습니다.");
+        return new IssueDeleteResponse(issueId, "이슈가 성공적으로 삭제되었습니다.");
     }
 
     public List<Issue> filterIssues(Integer projectId, Integer assigneeId, String status) {
