@@ -63,11 +63,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(HttpServletResponse res, @Validated @RequestBody LoginRequest loginRequest) {
         JwtResponse jwt = userLogin.execute(loginRequest.getEmail(), loginRequest.getPassword());
-        Cookie cookie = new Cookie("refreshToken", jwt.getRefreshToken());
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        res.addCookie(cookie);
-
         User user = userService.findUserByEmail(loginRequest.getEmail());
 
         Map<String, Object> response = new HashMap<>();
@@ -101,10 +96,6 @@ public class UserController {
     @PostMapping("/register")
     public JwtResponse signup(HttpServletResponse res, @Validated @RequestBody SignupRequest signupRequest) {
         JwtResponse jwt = userSignup.execute(signupRequest.getUserName(), signupRequest.getEmail(), signupRequest.getDepartment(), signupRequest.getPassword());
-        Cookie cookie = new Cookie("refreshToken", jwt.getRefreshToken());
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        res.addCookie(cookie);
         return jwt;
     }
 
@@ -119,9 +110,6 @@ public class UserController {
     @DeleteMapping("/logout")
     public boolean logout(@Parameter(hidden = true) @CookieValue("refreshToken") String oldToken, HttpServletResponse res) {
         addTokenToBlackList.execute(oldToken);
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setMaxAge(0);
-        res.addCookie(cookie);
         return true;
     }
   
