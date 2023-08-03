@@ -4,6 +4,7 @@ package com.logbook.backend.logbookbe.domain.issue.service;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.IssueDeleteResponse;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.repository.IssueRepository;
+import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class IssueService {
         return new IssueDeleteResponse(issueId, "이슈가 성공적으로 삭제되었습니다.");
     }
 
-    public List<Issue> filterIssues(Integer projectId, Integer assigneeId, String status) {
+    public List<Issue> filterIssues(Integer projectId, Integer assigneeId, Status status) {
         List<Issue> issues = issueRepository.findByProjectProjectId(projectId);
 
         if (assigneeId != null) {
@@ -67,7 +68,7 @@ public class IssueService {
 
         if (status != null) {
             issues = issues.stream()
-                    .filter(issue -> status.equalsIgnoreCase(issue.getStatus()))
+                    .filter(issue -> status.equals(issue.getStatus()))
                     .collect(Collectors.toList());
         }
 
