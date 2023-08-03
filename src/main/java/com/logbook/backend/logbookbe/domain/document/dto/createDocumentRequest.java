@@ -12,8 +12,6 @@ import java.util.List;
 @Setter
 public class createDocumentRequest {
 
-    private Integer documentId;
-
     private String documentTitle;
 
     private String documentContent;
