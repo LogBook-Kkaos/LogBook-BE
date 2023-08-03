@@ -76,7 +76,7 @@ public class ProjectController {
 
         existingProject.setProjectName(updatedProject.getProjectName());
         existingProject.setProjectDescription(updatedProject.getProjectDescription());
-        existingProject.setIsPublic(updatedProject.isPublic());
+        existingProject.setPublic(updatedProject.isPublic());
 
         return projectService.updateProject(existingProject);
     }
