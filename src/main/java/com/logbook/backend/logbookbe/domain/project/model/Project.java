@@ -2,10 +2,12 @@ package com.logbook.backend.logbookbe.domain.project.model;
 
 import com.logbook.backend.logbookbe.domain.document.model.Document;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -15,9 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="project_id")
-    private Integer projectId;
+    @GeneratedValue
+    @Type(type="uuid-char")
+    @Column(name = "project_id", columnDefinition = "VARCHAR(36)")
+    private UUID projectId = UUID.randomUUID();
 
     @Column(name="project_name", nullable = false)
     private String projectName;

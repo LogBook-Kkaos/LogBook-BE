@@ -1,19 +1,21 @@
 package com.logbook.backend.logbookbe.domain.document.model;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "DocumentFile")
 public class DocumentFile {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "file_id")
-    private Integer fileId;
+    @GeneratedValue
+    @Type(type="uuid-char")
+    @Column(name = "file_id", columnDefinition = "VARCHAR(36)")
+    private UUID fileId = UUID.randomUUID();
 
     @Lob
     @Column(name = "file_data", nullable = false)

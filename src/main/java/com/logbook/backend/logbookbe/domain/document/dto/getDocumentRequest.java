@@ -4,16 +4,14 @@ import com.logbook.backend.logbookbe.domain.document.model.DocumentFile;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class getDocumentRequest {
-    private Integer documentId;
+    private UUID documentId;
 
     private String documentTitle;
 

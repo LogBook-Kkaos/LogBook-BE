@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Getter
 @Setter
 
 public class getAllDocumentRequest {
-    private Integer documentId;
+    private UUID documentId;
 
     private String documentTitle;
 

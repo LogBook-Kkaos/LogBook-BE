@@ -3,11 +3,11 @@ package com.logbook.backend.logbookbe.domain.document.repository;
 import com.logbook.backend.logbookbe.domain.document.model.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.net.InterfaceAddress;
 import java.util.List;
+import java.util.UUID;
 
 public interface DocumentRepository extends JpaRepository<Document, Integer> {
-    List<Document> findByProjectProjectId(Integer projectId);
+    List<Document> findByProjectProjectId(UUID projectId);
 
-    Document findByDocumentId(Integer documentId);
+    Document findByDocumentId(UUID documentId);
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -56,7 +57,7 @@ public class ProjectController {
     @PostMapping
     @Operation(summary = "프로젝트 생성", description = "새로운 프로젝트를 생성합니다.")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class)))
-    public Integer createProject(@RequestBody Project project) {
+    public UUID createProject(@RequestBody Project project) {
         Project createdProject = projectService.createProject(project);
         return createdProject.getProjectId();
     }

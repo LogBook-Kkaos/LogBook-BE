@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class DocumentService {
@@ -32,7 +33,7 @@ public class DocumentService {
 
 
 
-    public List<getAllDocumentRequest> getAllDocuments(Integer projectId) {
+    public List<getAllDocumentRequest> getAllDocuments(UUID projectId) {
         List<Document> documents = documentRepository.findByProjectProjectId(projectId);
         List<getAllDocumentRequest> documentDTOs = new ArrayList<>();
         for (Document document : documents) {
@@ -44,7 +45,7 @@ public class DocumentService {
         }
         return documentDTOs;
     }
-    public getDocumentRequest getDocument(Integer documentId){
+    public getDocumentRequest getDocument(UUID documentId){
         Document document = documentRepository.findByDocumentId(documentId);
         getDocumentRequest documentDTO = new getDocumentRequest();
 
