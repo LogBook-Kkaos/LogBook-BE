@@ -3,9 +3,11 @@ package com.logbook.backend.logbookbe.domain.issue.model;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -16,9 +18,10 @@ import java.sql.Timestamp;
 public class Issue {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "issue_id")
-    private Integer issueId;
+    @GeneratedValue
+    @Type(type="uuid-char")
+    @Column(name = "issue_id", columnDefinition = "VARCHAR(36)")
+    private UUID issueId = UUID.randomUUID();
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
