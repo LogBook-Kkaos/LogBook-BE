@@ -51,9 +51,6 @@ public class WebSecurityConfig {
                 .antMatchers("/api/users/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
                 .antMatchers("/api/projects/**").hasAuthority(AuthRole.ROLE_ADMIN.getRole())
 
-                //로그인 접근관리 끝나면 search 뺄것
-                .antMatchers("/api/users/search").permitAll()
-
                 .anyRequest().authenticated()
                 .and()
 
