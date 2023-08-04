@@ -19,7 +19,7 @@ public class Project {
     @Column(name="project_id")
     private Integer projectId;
 
-    @Column(name="project_title", nullable = false)
+    @Column(name="project_name", nullable = false)
     private String projectName;
 
     @Lob
