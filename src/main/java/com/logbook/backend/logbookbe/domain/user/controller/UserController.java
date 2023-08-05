@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import java.util.List;
 import java.util.HashMap;
@@ -73,7 +74,6 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
-
 
     @Operation(summary = "사용자 토큰갱신", description = "AccessToken을 갱신합니다. 이 때 Cookie에 있는 RefreshToken을 자동으로 가져와 사용합니다.")
     @ApiResponses({

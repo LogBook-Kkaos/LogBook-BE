@@ -2,7 +2,11 @@ package com.logbook.backend.logbookbe.domain.user.model;
 
 import com.logbook.backend.logbookbe.domain.user.type.Vendor;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,9 +16,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class User {
     @Id
-    @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    @Type(type="uuid-char")
+    @Column(name = "id", columnDefinition = "VARCHAR(36)")
+    private UUID id = UUID.randomUUID();
 
     @Column(name="vendor", columnDefinition = "CHAR(10)")
     @Enumerated(EnumType.STRING)
