@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/projects/{projectId}/issues")
@@ -30,7 +31,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public List<Issue> getAllIssues(@PathVariable Integer projectId) {
+    public List<Issue> getAllIssues(@PathVariable UUID projectId) {
         return issueService.getAllIssues(projectId);
     }
 
@@ -41,7 +42,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue getIssueById(@PathVariable Integer issueId) {
+    public Issue getIssueById(@PathVariable UUID issueId) {
         return issueService.getIssueById(issueId);
     }
 
@@ -52,7 +53,7 @@ public class IssueController {
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue createIssue(@PathVariable Integer projectId, @RequestBody Issue issue) {
+    public Issue createIssue(@PathVariable UUID projectId, @RequestBody Issue issue) {
         return issueService.createIssue(projectId, issue);
     }
 
@@ -64,7 +65,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue updateIssue(@PathVariable Integer issueId, @RequestBody Issue updatedIssue) {
+    public Issue updateIssue(@PathVariable UUID issueId, @RequestBody Issue updatedIssue) {
         return issueService.updateIssue(issueId, updatedIssue);
     }
 
@@ -75,7 +76,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public IssueDeleteResponse deleteIssue(@PathVariable Integer issueId) {
+    public IssueDeleteResponse deleteIssue(@PathVariable UUID issueId) {
         return issueService.deleteIssue(issueId);
     }
 
@@ -86,8 +87,8 @@ public class IssueController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public List<Issue> filterIssues(
-            @PathVariable Integer projectId,
-            @RequestParam(required = false) Integer assignee,
+            @PathVariable UUID projectId,
+            @RequestParam(required = false) UUID assignee,
             @RequestParam(required = false) Status status) {
         return issueService.filterIssues(projectId, assignee, status);
     }
