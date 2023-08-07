@@ -1,8 +1,10 @@
 package com.logbook.backend.logbookbe.domain.issue.controller;
 
 import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
+import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.createIssueRequest;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.deleteIssueResponse;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.getAllIssuesRequest;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.service.IssueService;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +28,8 @@ public class IssueController {
     @Autowired
     private IssueService issueService;
 
+
+
     @GetMapping
     @Operation(summary = "모든 이슈 목록 조회", description = "모든 이슈의 목록을 조회합니다.")
     @ApiResponses({
@@ -32,8 +37,9 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public List<Issue> getAllIssues(@PathVariable UUID projectId) {
-        return issueService.getAllIssues(projectId);
+    public ResponseEntity<List<getAllIssuesRequest>> getAllIssues(@PathVariable UUID projectId) {
+        List<getAllIssuesRequest> getAllIssues = issueService.getAllIssues(projectId);
+        return ResponseEntity.ok(getAllIssues);
     }
 
     @GetMapping("/{issueId}")
@@ -54,8 +60,8 @@ public class IssueController {
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public boolean createIssue(@RequestBody createIssueRequest issueDTO, @PathVariable UUID projectId) {
-        boolean createdIssueRequest = issueService.createIssue(issueDTO, projectId);
+    public UUID createIssue(@RequestBody createIssueRequest issueDTO, @PathVariable UUID projectId) {
+        UUID createdIssueRequest = issueService.createIssue(issueDTO, projectId);
         return createdIssueRequest;
     }
 
