@@ -3,12 +3,10 @@ package com.logbook.backend.logbookbe.domain.issue.service;
 
 import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
 import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
+import com.logbook.backend.logbookbe.domain.document.dto.getDocumentRequest;
 import com.logbook.backend.logbookbe.domain.document.model.Document;
 import com.logbook.backend.logbookbe.domain.document.repository.DocumentRepository;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.assigneeRequest;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.createIssueRequest;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.deleteIssueResponse;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.getAllIssuesRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.*;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.repository.IssueRepository;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
@@ -70,9 +68,29 @@ public class IssueService {
         return issueDTOs;
     }
 
-    public Issue getIssueById(UUID issueId) {
-        return issueRepository.findById(issueId)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 이슈를 찾을 수 없습니다."));
+    public getIssueRequest getIssueById(UUID issueId) {
+        Issue issue = issueRepository.findByIssueId(issueId);
+        getIssueRequest issueDTO = new getIssueRequest();
+
+        issueDTO.setIssueId(issue.getIssueId());
+        issueDTO.setIssueTitle(issue.getIssueTitle());
+        issueDTO.setIssueDescription(issue.getIssueDescription());
+        issueDTO.setStatus(issue.getStatus());
+        issueDTO.setStartDate(issue.getStartDate());
+        issueDTO.setEndDate(issue.getEndDate());
+
+        Member assignee = issue.getAssignee();
+        assigneeRequest assigneeDTO = new assigneeRequest();
+        assigneeDTO.setAssigneeId(assignee.getMemberId());
+
+        User user = assignee.getUser();
+        String username = user.getUserName();
+        assigneeDTO.setUserName(username);
+
+        issueDTO.setAssignee(assigneeDTO);
+
+        return issueDTO;
+
     }
 
     public UUID createIssue(createIssueRequest issueDto, UUID projectId) {

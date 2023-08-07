@@ -2,9 +2,11 @@ package com.logbook.backend.logbookbe.domain.issue.controller;
 
 import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
 import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
+import com.logbook.backend.logbookbe.domain.document.dto.getDocumentRequest;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.createIssueRequest;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.deleteIssueResponse;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.getAllIssuesRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.getIssueRequest;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.service.IssueService;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,8 +52,9 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue getIssueById(@PathVariable UUID issueId) {
-        return issueService.getIssueById(issueId);
+    public ResponseEntity<getIssueRequest> getIssueById(@PathVariable UUID projectId, @PathVariable UUID issueId) {
+        getIssueRequest getIssueById = issueService.getIssueById(issueId);
+        return new ResponseEntity<>(getIssueById, HttpStatus.CREATED);
     }
 
     @PostMapping
