@@ -1,10 +1,11 @@
 package com.logbook.backend.logbookbe.domain.issue.controller;
 
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.IssueDeleteResponse;
+import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.createIssueRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.deleteIssueResponse;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.service.IssueService;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
-import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,8 +54,9 @@ public class IssueController {
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue createIssue(@PathVariable UUID projectId, @RequestBody Issue issue) {
-        return issueService.createIssue(projectId, issue);
+    public boolean createIssue(@RequestBody createIssueRequest issueDTO, @PathVariable UUID projectId) {
+        boolean createdIssueRequest = issueService.createIssue(issueDTO, projectId);
+        return createdIssueRequest;
     }
 
     @PutMapping("/{issueId}")
@@ -76,7 +78,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public IssueDeleteResponse deleteIssue(@PathVariable UUID issueId) {
+    public deleteIssueResponse deleteIssue(@PathVariable UUID issueId) {
         return issueService.deleteIssue(issueId);
     }
 

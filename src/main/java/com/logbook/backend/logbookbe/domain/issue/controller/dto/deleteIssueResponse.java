@@ -9,7 +9,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class IssueDeleteResponse {
+public class deleteIssueResponse {
     private UUID issueId;
     private String message;
 }
