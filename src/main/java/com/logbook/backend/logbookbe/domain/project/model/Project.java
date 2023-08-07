@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 public class Project {
     @Id
