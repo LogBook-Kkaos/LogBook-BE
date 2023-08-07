@@ -120,7 +120,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public User updateUser(@PathVariable("user_id") Long userId, @RequestBody User updatedUser) {
+    public User updateUser(@PathVariable("user_id") UUID userId, @RequestBody User updatedUser) {
         User existingUser = userService.getUserById(userId);
         if (existingUser == null) {
             throw new UserNotFoundException();
@@ -161,7 +161,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{user_id}")
-    public UserInfoResponse getUserById(@PathVariable("user_id") Long userId) {
+    public UserInfoResponse getUserById(@PathVariable("user_id") UUID userId) {
         User user = userService.getUserById(userId);
         UserInfoResponse userInfoResponse = new UserInfoResponse();
         userInfoResponse.setUserName(user.getUserName());
@@ -200,7 +200,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public DeleteResponse deleteUser(@PathVariable("user_id") Long userId) {
+    public DeleteResponse deleteUser(@PathVariable("user_id") UUID userId) {
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new UserNotFoundException();

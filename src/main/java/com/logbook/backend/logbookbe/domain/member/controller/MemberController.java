@@ -25,6 +25,7 @@ import com.logbook.backend.logbookbe.domain.project.exception.ProjectNotFoundExc
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/projects/{project_id}/members")
@@ -52,9 +53,9 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<MemberResponse> createMember(@PathVariable("project_id") Long projectId,
+    public ResponseEntity<MemberResponse> createMember(@PathVariable("project_id") UUID projectId,
                                                        @RequestBody Member member) {
-        Project project = projectRepository.findById(Math.toIntExact(projectId))
+        Project project = (Project) projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException());
         User user = userRepository.findById(member.getUser().getId())
                 .orElseThrow(UserNotFoundException::new);
@@ -72,8 +73,8 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EditMemberResponse>> getMembersForProject(@PathVariable("project_id") Long projectId) {
-        Project project = projectRepository.findById(Math.toIntExact(projectId))
+    public ResponseEntity<List<EditMemberResponse>> getMembersForProject(@PathVariable("project_id") UUID projectId) {
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(ProjectNotFoundException::new);
 
         List<Member> members = memberRepository.findByProject(project);

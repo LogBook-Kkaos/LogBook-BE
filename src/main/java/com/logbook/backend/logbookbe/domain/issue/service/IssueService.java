@@ -6,6 +6,7 @@ import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.repository.IssueRepository;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
+import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,7 +36,7 @@ public class IssueService {
     public Issue createIssue(UUID projectId, Issue issue) {
         return projectRepository.findById(projectId)
                 .map(project -> {
-                    issue.setProject(project);
+                    issue.setProject((Project) project);
                     return issueRepository.save(issue);
                 })
                 .orElseThrow(() -> new NoSuchElementException("해당하는 프로젝트를 찾을 수 없습니다."));

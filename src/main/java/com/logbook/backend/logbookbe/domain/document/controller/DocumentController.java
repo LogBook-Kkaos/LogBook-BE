@@ -28,7 +28,7 @@ public class DocumentController {
 
     @Operation(summary = "기술문서 생성", description = "기술문서를 생성합니다.")
     @PostMapping
-    public boolean createDocument(@RequestBody createDocumentRequest documentDTO, @PathVariable Integer projectId) {
+    public boolean createDocument(@RequestBody createDocumentRequest documentDTO, @PathVariable UUID projectId) {
         boolean createdDocumentRequest = documentService.createDocument(documentDTO, projectId);
         return createdDocumentRequest;
     }

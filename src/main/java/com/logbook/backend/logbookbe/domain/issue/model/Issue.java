@@ -29,7 +29,7 @@ public class Issue {
     private Project project;
 
     @ManyToOne
-    @Column(name = "assignee_id", nullable = false)
+    @JoinColumn(name = "assignee_id", nullable = false)
     private Member assignee;
 
     @Column(name = "start_date")
