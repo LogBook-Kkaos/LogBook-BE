@@ -31,12 +31,12 @@ public class IssueService {
     }
 
 
-    public List<GetAllIssuesRequest> getAllIssues(UUID projectId) {
+    public List<GetIssueRequest> getAllIssues(UUID projectId) {
         List<Issue> issues = issueRepository.findByProjectProjectId(projectId);
-        List<GetAllIssuesRequest> issueDTOs = new ArrayList<>();
+        List<GetIssueRequest> issueDTOs = new ArrayList<>();
 
         for (Issue issue : issues) {
-            GetAllIssuesRequest issueDTO = new GetAllIssuesRequest();
+            GetIssueRequest issueDTO = new GetIssueRequest();
             issueDTO.setIssueId(issue.getIssueId());
 
             Member assignee = issue.getAssignee();

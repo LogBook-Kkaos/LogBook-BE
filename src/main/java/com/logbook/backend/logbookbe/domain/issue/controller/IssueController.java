@@ -2,7 +2,6 @@ package com.logbook.backend.logbookbe.domain.issue.controller;
 
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.CreateIssueRequest;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.DeleteIssueResponse;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.GetAllIssuesRequest;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.GetIssueRequest;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.service.IssueService;
@@ -37,8 +36,8 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<List<GetAllIssuesRequest>> getAllIssues(@PathVariable UUID projectId) {
-        List<GetAllIssuesRequest> getAllIssues = issueService.getAllIssues(projectId);
+    public ResponseEntity<List<GetIssueRequest>> getAllIssues(@PathVariable UUID projectId) {
+        List<GetIssueRequest> getAllIssues = issueService.getAllIssues(projectId);
         return ResponseEntity.ok(getAllIssues);
     }
 
