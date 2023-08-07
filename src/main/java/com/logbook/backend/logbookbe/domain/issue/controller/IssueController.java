@@ -1,12 +1,9 @@
 package com.logbook.backend.logbookbe.domain.issue.controller;
 
-import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.dto.getDocumentRequest;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.createIssueRequest;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.deleteIssueResponse;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.getAllIssuesRequest;
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.getIssueRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.CreateIssueRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.DeleteIssueResponse;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.GetAllIssuesRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.GetIssueRequest;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.service.IssueService;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
@@ -40,8 +37,8 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<List<getAllIssuesRequest>> getAllIssues(@PathVariable UUID projectId) {
-        List<getAllIssuesRequest> getAllIssues = issueService.getAllIssues(projectId);
+    public ResponseEntity<List<GetAllIssuesRequest>> getAllIssues(@PathVariable UUID projectId) {
+        List<GetAllIssuesRequest> getAllIssues = issueService.getAllIssues(projectId);
         return ResponseEntity.ok(getAllIssues);
     }
 
@@ -52,8 +49,8 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<getIssueRequest> getIssueById(@PathVariable UUID projectId, @PathVariable UUID issueId) {
-        getIssueRequest getIssueById = issueService.getIssueById(issueId);
+    public ResponseEntity<GetIssueRequest> getIssueById(@PathVariable UUID projectId, @PathVariable UUID issueId) {
+        GetIssueRequest getIssueById = issueService.getIssueById(issueId);
         return new ResponseEntity<>(getIssueById, HttpStatus.CREATED);
     }
 
@@ -64,7 +61,7 @@ public class IssueController {
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public UUID createIssue(@RequestBody createIssueRequest issueDTO, @PathVariable UUID projectId) {
+    public UUID createIssue(@RequestBody CreateIssueRequest issueDTO, @PathVariable UUID projectId) {
         UUID createdIssueRequest = issueService.createIssue(issueDTO, projectId);
         return createdIssueRequest;
     }
@@ -77,8 +74,8 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<createIssueRequest> updateIssue(@PathVariable UUID issueId, @RequestBody createIssueRequest updatedIssue) {
-        createIssueRequest updatedIssueResult = issueService.updateIssue(issueId, updatedIssue);
+    public ResponseEntity<CreateIssueRequest> updateIssue(@PathVariable UUID issueId, @RequestBody CreateIssueRequest updatedIssue) {
+        CreateIssueRequest updatedIssueResult = issueService.updateIssue(issueId, updatedIssue);
         return new ResponseEntity<>(updatedIssueResult, HttpStatus.OK);
     }
 
@@ -89,7 +86,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public deleteIssueResponse deleteIssue(@PathVariable UUID issueId) {
+    public DeleteIssueResponse deleteIssue(@PathVariable UUID issueId) {
         return issueService.deleteIssue(issueId);
     }
 

@@ -1,27 +1,18 @@
 
 package com.logbook.backend.logbookbe.domain.issue.service;
 
-import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.dto.getDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.model.Document;
-import com.logbook.backend.logbookbe.domain.document.repository.DocumentRepository;
 import com.logbook.backend.logbookbe.domain.issue.controller.dto.*;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.repository.IssueRepository;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
-import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,16 +31,16 @@ public class IssueService {
     }
 
 
-    public List<getAllIssuesRequest> getAllIssues(UUID projectId) {
+    public List<GetAllIssuesRequest> getAllIssues(UUID projectId) {
         List<Issue> issues = issueRepository.findByProjectProjectId(projectId);
-        List<getAllIssuesRequest> issueDTOs = new ArrayList<>();
+        List<GetAllIssuesRequest> issueDTOs = new ArrayList<>();
 
         for (Issue issue : issues) {
-            getAllIssuesRequest issueDTO = new getAllIssuesRequest();
+            GetAllIssuesRequest issueDTO = new GetAllIssuesRequest();
             issueDTO.setIssueId(issue.getIssueId());
 
             Member assignee = issue.getAssignee();
-            assigneeRequest assigneeDTO = new assigneeRequest();
+            AssigneeRequest assigneeDTO = new AssigneeRequest();
             assigneeDTO.setAssigneeId(assignee.getMemberId());
 
             User user = assignee.getUser();
@@ -70,9 +61,9 @@ public class IssueService {
         return issueDTOs;
     }
 
-    public getIssueRequest getIssueById(UUID issueId) {
+    public GetIssueRequest getIssueById(UUID issueId) {
         Issue issue = issueRepository.findByIssueId(issueId);
-        getIssueRequest issueDTO = new getIssueRequest();
+        GetIssueRequest issueDTO = new GetIssueRequest();
 
         issueDTO.setIssueId(issue.getIssueId());
         issueDTO.setIssueTitle(issue.getIssueTitle());
@@ -82,7 +73,7 @@ public class IssueService {
         issueDTO.setEndDate(issue.getEndDate());
 
         Member assignee = issue.getAssignee();
-        assigneeRequest assigneeDTO = new assigneeRequest();
+        AssigneeRequest assigneeDTO = new AssigneeRequest();
         assigneeDTO.setAssigneeId(assignee.getMemberId());
 
         User user = assignee.getUser();
@@ -95,7 +86,7 @@ public class IssueService {
 
     }
 
-    public UUID createIssue(createIssueRequest issueDTO, UUID projectId) {
+    public UUID createIssue(CreateIssueRequest issueDTO, UUID projectId) {
         Issue issue = new Issue();
         issue.setAssignee(issueDTO.getAssignee());
         issue.setIssueTitle(issueDTO.getIssueTitle());
@@ -117,7 +108,7 @@ public class IssueService {
         return issue.getIssueId();
     }
 
-    public createIssueRequest updateIssue(UUID issueId, createIssueRequest updatedIssueDTO) {
+    public CreateIssueRequest updateIssue(UUID issueId, CreateIssueRequest updatedIssueDTO) {
         Optional<Issue> existingIssueOptional = issueRepository.findById(issueId);
 
         if (existingIssueOptional.isPresent()) {
@@ -132,7 +123,7 @@ public class IssueService {
             Issue updatedIssue = issueRepository.save(existingIssue);
 
 
-            createIssueRequest responseDTO = new createIssueRequest();
+            CreateIssueRequest responseDTO = new CreateIssueRequest();
             responseDTO.setAssignee(updatedIssue.getAssignee());
             responseDTO.setIssueTitle(updatedIssue.getIssueTitle());
             responseDTO.setIssueDescription(updatedIssue.getIssueDescription());
@@ -147,9 +138,9 @@ public class IssueService {
 
     }
 
-    public deleteIssueResponse deleteIssue(UUID issueId) {
+    public DeleteIssueResponse deleteIssue(UUID issueId) {
         issueRepository.deleteById(issueId);
-        return new deleteIssueResponse(issueId, "이슈가 성공적으로 삭제되었습니다.");
+        return new DeleteIssueResponse(issueId, "이슈가 성공적으로 삭제되었습니다.");
     }
 
     public List<Issue> filterIssues(UUID projectId, UUID assigneeId, Status status) {

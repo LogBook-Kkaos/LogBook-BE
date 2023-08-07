@@ -6,11 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Getter
 @Setter
-public class createIssueRequest {
+public class CreateIssueRequest {
 
     private Member assignee;
     private String issueTitle;

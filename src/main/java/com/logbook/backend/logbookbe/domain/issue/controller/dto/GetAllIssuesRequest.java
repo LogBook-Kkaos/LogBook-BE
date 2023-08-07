@@ -9,11 +9,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class getAllIssuesRequest {
+public class GetAllIssuesRequest {
 
     private UUID issueId;
 
-    private assigneeRequest assignee;
+    private AssigneeRequest assignee;
 
     private String issueTitle;
 
