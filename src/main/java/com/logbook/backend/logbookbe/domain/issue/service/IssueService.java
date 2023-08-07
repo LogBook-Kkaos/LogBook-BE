@@ -11,12 +11,14 @@ import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.repository.IssueRepository;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
+import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -93,14 +95,14 @@ public class IssueService {
 
     }
 
-    public UUID createIssue(createIssueRequest issueDto, UUID projectId) {
+    public UUID createIssue(createIssueRequest issueDTO, UUID projectId) {
         Issue issue = new Issue();
-        issue.setAssignee(issueDto.getAssignee());
-        issue.setIssueTitle(issueDto.getIssueTitle());
-        issue.setIssueDescription(issueDto.getIssueDescription());
-        issue.setStatus(issueDto.getStatus());
-        issue.setStartDate(issueDto.getStartDate());
-        issue.setEndDate(issueDto.getEndDate());
+        issue.setAssignee(issueDTO.getAssignee());
+        issue.setIssueTitle(issueDTO.getIssueTitle());
+        issue.setIssueDescription(issueDTO.getIssueDescription());
+        issue.setStatus(issueDTO.getStatus());
+        issue.setStartDate(issueDTO.getStartDate());
+        issue.setEndDate(issueDTO.getEndDate());
 
         Optional<Project> projectOptional = projectRepository.findByProjectId(projectId);
 
@@ -115,16 +117,34 @@ public class IssueService {
         return issue.getIssueId();
     }
 
-    public Issue updateIssue(UUID issueId, Issue updatedIssue) {
-        return issueRepository.findById(issueId)
-                .map(issue -> {
-                    issue.setIssueTitle(updatedIssue.getIssueTitle());
-                    issue.setIssueDescription(updatedIssue.getIssueDescription());
-                    issue.setStatus(updatedIssue.getStatus());
-                    issue.setAssignee(updatedIssue.getAssignee());
-                    return issueRepository.save(issue);
-                })
-                .orElseThrow(() -> new NoSuchElementException("해당하는 이슈를 찾을 수 없습니다."));
+    public createIssueRequest updateIssue(UUID issueId, createIssueRequest updatedIssueDTO) {
+        Optional<Issue> existingIssueOptional = issueRepository.findById(issueId);
+
+        if (existingIssueOptional.isPresent()) {
+            Issue existingIssue = existingIssueOptional.get();
+            existingIssue.setAssignee(updatedIssueDTO.getAssignee());
+            existingIssue.setIssueTitle(updatedIssueDTO.getIssueTitle());
+            existingIssue.setIssueDescription(updatedIssueDTO.getIssueDescription());
+            existingIssue.setStatus(updatedIssueDTO.getStatus());
+            existingIssue.setStartDate(updatedIssueDTO.getStartDate());
+            existingIssue.setEndDate(updatedIssueDTO.getEndDate());
+
+            Issue updatedIssue = issueRepository.save(existingIssue);
+
+
+            createIssueRequest responseDTO = new createIssueRequest();
+            responseDTO.setAssignee(updatedIssue.getAssignee());
+            responseDTO.setIssueTitle(updatedIssue.getIssueTitle());
+            responseDTO.setIssueDescription(updatedIssue.getIssueDescription());
+            responseDTO.setStatus(updatedIssue.getStatus());
+            responseDTO.setStartDate(updatedIssue.getStartDate());
+            responseDTO.setEndDate(updatedIssue.getEndDate());
+
+            return responseDTO;
+        } else {
+            throw new NotFoundException("해당하는 이슈가 없습니다.");
+        }
+
     }
 
     public deleteIssueResponse deleteIssue(UUID issueId) {

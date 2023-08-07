@@ -77,8 +77,9 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue updateIssue(@PathVariable UUID issueId, @RequestBody Issue updatedIssue) {
-        return issueService.updateIssue(issueId, updatedIssue);
+    public ResponseEntity<createIssueRequest> updateIssue(@PathVariable UUID issueId, @RequestBody createIssueRequest updatedIssue) {
+        createIssueRequest updatedIssueResult = issueService.updateIssue(issueId, updatedIssue);
+        return new ResponseEntity<>(updatedIssueResult, HttpStatus.OK);
     }
 
     @DeleteMapping("/{issueId}")
