@@ -1,5 +1,7 @@
 package com.logbook.backend.logbookbe.domain.issue.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
@@ -29,14 +31,8 @@ public class Issue {
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "assignee_id", nullable = false)
+    @JoinColumn(name = "assignee_id")
     private Member assignee;
-
-    @Column(name = "start_date")
-    private Timestamp startDate;
-
-    @Column(name = "end_date")
-    private Timestamp endDate;
 
     @Column(name = "issue_title", nullable = false)
     private String issueTitle;
@@ -47,4 +43,10 @@ public class Issue {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
+    @Column(name = "start_date")
+    private Timestamp startDate;
+
+    @Column(name = "end_date")
+    private Timestamp endDate;
 }
