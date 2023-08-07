@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProjectService {
@@ -19,7 +20,7 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project getProjectById(Integer projectId) {
+    public Project getProjectById(UUID projectId) {
         return projectRepository.findById(projectId)
                 .orElse(null);
     }
@@ -33,7 +34,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public DeleteResponse deleteProject(Integer projectId) {
+    public DeleteResponse deleteProject(UUID projectId) {
         projectRepository.deleteById(projectId);
         return new DeleteResponse(projectId, "Project deleted successfully");
     }

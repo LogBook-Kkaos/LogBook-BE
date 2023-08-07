@@ -25,6 +25,7 @@ import com.logbook.backend.logbookbe.domain.project.exception.ProjectNotFoundExc
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/projects/{project_id}/members")
@@ -52,9 +53,9 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<MemberResponse> createMember(@PathVariable("project_id") Long projectId,
+    public ResponseEntity<MemberResponse> createMember(@PathVariable("project_id") UUID projectId,
                                                        @RequestBody Member member) {
-        Project project = projectRepository.findById(Math.toIntExact(projectId))
+        Project project = (Project) projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException());
         User user = userRepository.findById(member.getUser().getId())
                 .orElseThrow(UserNotFoundException::new);
@@ -62,18 +63,18 @@ public class MemberController {
         Member existingMember = memberRepository.findByUserAndProject(user, project);
 
         if (existingMember != null) {
-            return ResponseEntity.badRequest().body(new MemberResponse(0, "Member already exists for this user and project."));
+            return ResponseEntity.badRequest().body(new MemberResponse(UUID.randomUUID(), "Member already exists for this user and project."));
         } else {
             member.setProject(project);
             member.setUser(user);
             Member savedMember = memberRepository.save(member);
-            return ResponseEntity.ok(new MemberResponse(Math.toIntExact(savedMember.getMemberId()), "success"));
+            return ResponseEntity.ok(new MemberResponse(savedMember.getMemberId(), "success"));
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<EditMemberResponse>> getMembersForProject(@PathVariable("project_id") Long projectId) {
-        Project project = projectRepository.findById(Math.toIntExact(projectId))
+    public ResponseEntity<List<EditMemberResponse>> getMembersForProject(@PathVariable("project_id") UUID projectId) {
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(ProjectNotFoundException::new);
 
         List<Member> members = memberRepository.findByProject(project);
@@ -81,9 +82,8 @@ public class MemberController {
         List<EditMemberResponse> responses = new ArrayList<>();
         for (Member member : members) {
             EditMemberResponse editMemberResponse = new EditMemberResponse();
-            editMemberResponse.setMemberId(Math.toIntExact(member.getMemberId()));
+            editMemberResponse.setMemberId(member.getMemberId());
             editMemberResponse.setPermissionLevel(member.getPermissionLevel());
-            editMemberResponse.setRole(member.getRole());
             responses.add(editMemberResponse);
         }
 
@@ -97,14 +97,13 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{memberId}")
-    public ResponseEntity<EditMemberResponse> getMember(@PathVariable("project_id") Long projectId,
-                                                        @PathVariable Long memberId) {
+    public ResponseEntity<EditMemberResponse> getMember(@PathVariable("project_id") UUID projectId,
+                                                        @PathVariable UUID memberId) {
         return memberRepository.findById(memberId)
                 .map(existingMember -> {
                     EditMemberResponse editMemberResponse = new EditMemberResponse();
-                    editMemberResponse.setMemberId(Math.toIntExact(existingMember.getMemberId()));
+                    editMemberResponse.setMemberId(existingMember.getMemberId());
                     editMemberResponse.setPermissionLevel(existingMember.getPermissionLevel());
-                    editMemberResponse.setRole(existingMember.getRole());
                     return ResponseEntity.ok(editMemberResponse);
                 })
                 .orElseThrow(MemberNotFoundException::new);
@@ -117,20 +116,17 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PutMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> updateMember(@PathVariable("project_id") Long projectId,
-                                                       @PathVariable Long memberId,
+    public ResponseEntity<MemberResponse> updateMember(@PathVariable("project_id") UUID projectId,
+                                                       @PathVariable UUID memberId,
                                                        @RequestBody Member updatedMember) {
         return memberRepository.findById(memberId)
                 .map(existingMember -> {
                     if (updatedMember.getPermissionLevel() != null) {
                         existingMember.setPermissionLevel(updatedMember.getPermissionLevel());
                     }
-                    if (updatedMember.getRole() != null) {
-                        existingMember.setRole(updatedMember.getRole());
-                    }
                    
                     memberRepository.save(existingMember);
-                    return ResponseEntity.ok(new MemberResponse(Math.toIntExact(existingMember.getMemberId()), "success"));
+                    return ResponseEntity.ok(new MemberResponse(existingMember.getMemberId(), "success"));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -142,12 +138,12 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> deleteMember(@PathVariable("project_id") Long projectId,
-                                                       @PathVariable Long memberId) {
+    public ResponseEntity<MemberResponse> deleteMember(@PathVariable("project_id") UUID projectId,
+                                                       @PathVariable UUID memberId) {
         Member existingMember = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
         memberRepository.delete(existingMember);
-        return ResponseEntity.ok(new MemberResponse(Math.toIntExact(existingMember.getMemberId()), "success"));
+        return ResponseEntity.ok(new MemberResponse(existingMember.getMemberId(), "success"));
     }
 }

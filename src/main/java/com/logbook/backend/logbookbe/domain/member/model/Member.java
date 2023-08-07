@@ -1,11 +1,14 @@
 package com.logbook.backend.logbookbe.domain.member.model;
 
+import com.logbook.backend.logbookbe.domain.member.type.PermissionLevel;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -15,19 +18,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_id")
-    private Long memberId;
+    @GeneratedValue
+    @Type(type="uuid-char")
+    @Column(name="member_id", columnDefinition = "VARCHAR(36)")
+    private UUID memberId = UUID.randomUUID();
 
     @Column(name="permission_level", nullable = false)
-    private String permissionLevel;
+    private PermissionLevel permissionLevel;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-
-    @Column(name="role", nullable = false)
-    private String role;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

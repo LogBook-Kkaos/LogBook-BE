@@ -50,7 +50,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Project getProjectById(@PathVariable("projectId") Integer projectId) {
+    public Project getProjectById(@PathVariable("projectId") UUID projectId) {
         return projectService.getProjectById(projectId);
     }
 
@@ -69,7 +69,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Project updateProject(@PathVariable("projectId") Integer projectId, @RequestBody Project updatedProject) {
+    public Project updateProject(@PathVariable("projectId") UUID projectId, @RequestBody Project updatedProject) {
         Project existingProject = projectService.getProjectById(projectId);
         if (existingProject == null) {
             throw new UserNotFoundException();
@@ -89,7 +89,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public DeleteResponse deleteProject(@PathVariable("projectId") Integer projectId) {
+    public DeleteResponse deleteProject(@PathVariable("projectId") UUID projectId) {
         return projectService.deleteProject(projectId);
     }
 }

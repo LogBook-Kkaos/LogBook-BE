@@ -58,7 +58,7 @@ public class DocumentService {
 
     }
 
-    public boolean createDocument(createDocumentRequest documentDto, Integer projectId){
+    public boolean createDocument(createDocumentRequest documentDto, UUID projectId){
         Document document = new Document();
         document.setDocumentTitle(documentDto.getDocumentTitle());
         document.setDocumentContent(documentDto.getDocumentContent());
