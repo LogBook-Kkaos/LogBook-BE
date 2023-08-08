@@ -1,6 +1,7 @@
 package com.logbook.backend.logbookbe.domain.project.model;
 
 import com.logbook.backend.logbookbe.domain.document.model.Document;
+import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -13,8 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
     @Id
     @GeneratedValue
@@ -37,5 +38,8 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReleaseNote> releaseNotes = new ArrayList<>();
 
 }
