@@ -32,7 +32,7 @@ public class ProjectController {
         List<PublicProjectResponse> projectResponses = new ArrayList<>();
 
         for (Project project : projects) {
-            if (project.isPublic()) {
+            if (project.getIsPublic().equals("public")) {
                 PublicProjectResponse projectResponse = new PublicProjectResponse();
                 projectResponse.setProjectName(project.getProjectName());
                 projectResponse.setProjectDescription(project.getProjectDescription());
@@ -58,6 +58,7 @@ public class ProjectController {
     @Operation(summary = "프로젝트 생성", description = "새로운 프로젝트를 생성합니다.")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Project.class)))
     public UUID createProject(@RequestBody Project project) {
+        System.out.println("Received project with isPublic: " + project);
         Project createdProject = projectService.createProject(project);
         return createdProject.getProjectId();
     }
@@ -77,7 +78,7 @@ public class ProjectController {
 
         existingProject.setProjectName(updatedProject.getProjectName());
         existingProject.setProjectDescription(updatedProject.getProjectDescription());
-        existingProject.setPublic(updatedProject.isPublic());
+        existingProject.setIsPublic(updatedProject.getIsPublic());
 
         return projectService.updateProject(existingProject);
     }

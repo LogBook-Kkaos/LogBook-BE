@@ -30,7 +30,7 @@ public class Project {
     private String projectDescription;
 
     @Column(name="is_public", nullable = false)
-    private boolean isPublic;
+    private String isPublic;
 
     @Column(name="member_count")
     private Integer memberCount;
