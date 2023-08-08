@@ -1,8 +1,8 @@
-package com.logbook.backend.logbookbe.releaseNote.controller;
+package com.logbook.backend.logbookbe.domain.releaseNote.controller;
 
-import com.logbook.backend.logbookbe.releaseNote.DTO.ReleaseNoteDTO;
-import com.logbook.backend.logbookbe.releaseNote.model.ReleaseNote;
-import com.logbook.backend.logbookbe.releaseNote.repository.ReleaseNoteRepository;
+import com.logbook.backend.logbookbe.domain.releaseNote.dto.ReleaseNoteDTO;
+import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
+import com.logbook.backend.logbookbe.domain.releaseNote.repository.ReleaseNoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

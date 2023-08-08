@@ -1,4 +1,4 @@
-package com.logbook.backend.logbookbe.releaseNote.DTO;
+package com.logbook.backend.logbookbe.domain.releaseNote.dto;
 
 import java.time.LocalDateTime;
 

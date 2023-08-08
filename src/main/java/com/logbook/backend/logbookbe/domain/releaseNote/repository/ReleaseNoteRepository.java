@@ -1,6 +1,6 @@
-package com.logbook.backend.logbookbe.releaseNote.repository;
+package com.logbook.backend.logbookbe.domain.releaseNote.repository;
 
-import com.logbook.backend.logbookbe.releaseNote.model.ReleaseNote;
+import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.logbook.backend.logbookbe.releaseNote.model;
+package com.logbook.backend.logbookbe.domain.releaseNote.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
