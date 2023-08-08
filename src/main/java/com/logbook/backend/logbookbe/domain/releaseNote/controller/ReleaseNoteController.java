@@ -1,37 +1,76 @@
 package com.logbook.backend.logbookbe.domain.releaseNote.controller;
 
-import com.logbook.backend.logbookbe.domain.releaseNote.dto.ReleaseNoteDTO;
+import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
+import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
+import com.logbook.backend.logbookbe.domain.document.dto.getDocumentRequest;
+import com.logbook.backend.logbookbe.domain.issue.model.Issue;
+import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.CreateReleaseNoteRequest;
+import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.DeleteReleaseNoteResponse;
+import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.GetReleaseNoteResponse;
 import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
-import com.logbook.backend.logbookbe.domain.releaseNote.repository.ReleaseNoteRepository;
+import com.logbook.backend.logbookbe.domain.releaseNote.service.ReleaseNoteService;
+import com.logbook.backend.logbookbe.global.error.ErrorResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/release-notes/create")
+@RequestMapping("/api/projects/{projectId}/release_notes")
 public class ReleaseNoteController {
 
     @Autowired
-    private ReleaseNoteRepository releaseNoteRepository;
+    private ReleaseNoteService releaseNoteService;
+
+    @GetMapping
+    public ResponseEntity<List<GetReleaseNoteResponse>> getAllReleaseNote(@PathVariable UUID projectId) {
+        List<GetReleaseNoteResponse> getAllReleaseNotes = releaseNoteService.getAllReleaseNotes(projectId);
+        return ResponseEntity.ok(getAllReleaseNotes);
+    }
+
+    @GetMapping("/{releaseNoteId}")
+    public ResponseEntity<GetReleaseNoteResponse> getReleaseNoteById(@PathVariable UUID projectId, @PathVariable UUID releaseNoteId) {
+        GetReleaseNoteResponse getReleaseNoteById = releaseNoteService.getReleaseNoteById(releaseNoteId);
+        return new ResponseEntity<>(getReleaseNoteById, HttpStatus.CREATED);
+    }
 
     @PostMapping
-    public ResponseEntity<String> createReleaseNote(@RequestBody ReleaseNoteDTO releaseNoteDTO) {
-        ReleaseNote releaseNote = new ReleaseNote();
-        releaseNote.setProjectId(releaseNoteDTO.getProjectId());
-        releaseNote.setUpdateDocumentsId(releaseNoteDTO.getUpdateDocumentsId());
-        releaseNote.setReleaseTitle(releaseNoteDTO.getReleaseTitle());
-        releaseNote.setReleaseContent(releaseNoteDTO.getReleaseContent());
-        releaseNote.setCreationDate(releaseNoteDTO.getCreationDate());
-        releaseNote.setVersion(releaseNoteDTO.getVersion());
-        releaseNote.setIsImportant(releaseNoteDTO.isImportant());
-        releaseNote.setIsPublic(releaseNoteDTO.isPublic());
-        releaseNote.setStatus(releaseNoteDTO.getStatus());
-
-        releaseNoteRepository.save(releaseNote);
-
-        return ResponseEntity.ok("Release note created successfully.");
+    public UUID createReleaseNote(@RequestBody CreateReleaseNoteRequest releaseNoteDTO, @PathVariable UUID projectId) {
+        UUID CreateReleaseNoteRequest = releaseNoteService.createReleaseNote(releaseNoteDTO, projectId);
+        return CreateReleaseNoteRequest;
     }
+
+    @PutMapping("/{releaseNoteId}")
+    public ResponseEntity<CreateReleaseNoteRequest> updateReleaseNote(@PathVariable("releaseNoteId") UUID releaseNoteId,
+                                                         @Valid @RequestBody CreateReleaseNoteRequest updatedReleaseNote) {
+        CreateReleaseNoteRequest updatedReleaesNoteResult = releaseNoteService.updateReleaseNote(releaseNoteId, updatedReleaseNote);
+        return new ResponseEntity<>(updatedReleaesNoteResult, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{releaseNoteId}")
+    public DeleteReleaseNoteResponse deleteReleaseNote(@PathVariable UUID releaseNoteId) {
+        return releaseNoteService.deleteReleaseNote(releaseNoteId);
+    }
+
+
+//    @GetMapping("/search")
+//    public List<ReleaseNote> searchReleaseNotes(/* 검색 파라미터 */) {
+//        return releaseNoteService.searchReleaseNotes(/* 검색 파라미터 전달 */);
+//    }
+//
+//    @GetMapping("/filter")
+//    public List<ReleaseNote> filterReleaseNotes(/* 필터링 파라미터 */) {
+//        return releaseNoteService.filterReleaseNotes(/* 필터링 파라미터 전달 */);
+//    }
+
+
 }
