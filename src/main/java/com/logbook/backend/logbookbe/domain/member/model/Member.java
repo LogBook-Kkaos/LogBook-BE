@@ -33,6 +33,14 @@ public class Member {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public static Member createMember(PermissionLevel permissionLevel, Project project, User user) {
+        Member member = new Member();
+        member.setPermissionLevel(permissionLevel);
+        member.setProject(project);
+        member.setUser(user);
+        return member;
+    }
 }
 
 
