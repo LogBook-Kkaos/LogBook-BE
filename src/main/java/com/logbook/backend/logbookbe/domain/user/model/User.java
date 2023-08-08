@@ -18,8 +18,8 @@ public class User {
     @Id
     @GeneratedValue
     @Type(type="uuid-char")
-    @Column(name = "id", columnDefinition = "VARCHAR(36)")
-    private UUID id = UUID.randomUUID();
+    @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
+    private UUID userId = UUID.randomUUID();
 
     @Column(name="vendor", columnDefinition = "CHAR(10)")
     @Enumerated(EnumType.STRING)
