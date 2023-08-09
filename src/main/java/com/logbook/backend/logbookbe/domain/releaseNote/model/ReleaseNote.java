@@ -16,7 +16,7 @@ import org.hibernate.annotations.Type;
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 public class ReleaseNote {
     @Id
     @GeneratedValue
