@@ -52,8 +52,8 @@ public class ReleaseNoteController {
     @PutMapping("/{releaseNoteId}")
     public ResponseEntity<CreateReleaseNoteRequest> updateReleaseNote(@PathVariable("releaseNoteId") UUID releaseNoteId,
                                                          @Valid @RequestBody CreateReleaseNoteRequest updatedReleaseNote) {
-        CreateReleaseNoteRequest updatedReleaesNoteResult = releaseNoteService.updateReleaseNote(releaseNoteId, updatedReleaseNote);
-        return new ResponseEntity<>(updatedReleaesNoteResult, HttpStatus.OK);
+        CreateReleaseNoteRequest updatedReleaseNoteResult = releaseNoteService.updateReleaseNote(releaseNoteId, updatedReleaseNote);
+        return new ResponseEntity<>(updatedReleaseNoteResult, HttpStatus.OK);
     }
 
     @DeleteMapping("/{releaseNoteId}")
