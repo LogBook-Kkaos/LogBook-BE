@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @Setter
 public class CreateReleaseNoteRequest {
 
-    private Member creator;
+    private CreatorRequest creator;
 
     private String releaseTitle;
 

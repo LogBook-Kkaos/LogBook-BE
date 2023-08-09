@@ -5,8 +5,11 @@ import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
 import com.logbook.backend.logbookbe.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MemberService {
@@ -16,5 +19,10 @@ public class MemberService {
 
     public List<Member> getAllUsers() {
         return memberRepository.findAll();
+    }
+
+    public Member findMemberById(UUID creatorId) {
+        Optional<Member> memberOptional = memberRepository.findById(creatorId);
+        return memberOptional.orElseThrow(() -> new NotFoundException("해당하는 멤버가 없습니다."));
     }
 }

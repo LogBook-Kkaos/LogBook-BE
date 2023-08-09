@@ -7,6 +7,8 @@ import com.logbook.backend.logbookbe.domain.document.model.Document;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
+import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
+import com.logbook.backend.logbookbe.domain.member.service.MemberService;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.CreateReleaseNoteRequest;
@@ -33,6 +35,9 @@ public class ReleaseNoteService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private MemberService memberService;
 
     public List<GetReleaseNoteResponse> getAllReleaseNotes(UUID projectId) {
         List<ReleaseNote> releaseNotes = releaseNoteRepository.findByProjectProjectId(projectId);
@@ -93,7 +98,10 @@ public class ReleaseNoteService {
     public UUID createReleaseNote(CreateReleaseNoteRequest releaseNoteDTO, UUID projectId){
         ReleaseNote releaseNote = new ReleaseNote();
         releaseNote.setReleaseTitle(releaseNoteDTO.getReleaseTitle());
-        releaseNote.setCreator(releaseNoteDTO.getCreator());
+
+        Member creator = memberService.findMemberById(releaseNoteDTO.getCreator().getCreatorId());
+        releaseNote.setCreator(creator);
+
         releaseNote.setVersion(releaseNoteDTO.getVersion());
         releaseNote.setCreationDate(Timestamp.from(Instant.now()));
         releaseNote.setPublic(releaseNoteDTO.isPublic());
@@ -117,7 +125,11 @@ public class ReleaseNoteService {
 
         if (existingReleaseNoteOptional.isPresent()) {
             ReleaseNote existingReleaseNote = existingReleaseNoteOptional.get();
-            existingReleaseNote.setCreator(updatedReleaseNoteDTO.getCreator());
+
+            Member creator = memberService.findMemberById(updatedReleaseNoteDTO.getCreator().getCreatorId());
+            existingReleaseNote.setCreator(creator);
+
+
             existingReleaseNote.setReleaseTitle(updatedReleaseNoteDTO.getReleaseTitle());
             existingReleaseNote.setVersion(updatedReleaseNoteDTO.getVersion());
             existingReleaseNote.setImportant(updatedReleaseNoteDTO.isImportant());
@@ -128,12 +140,17 @@ public class ReleaseNoteService {
 
 
             CreateReleaseNoteRequest responseDTO = new CreateReleaseNoteRequest();
-            responseDTO.setCreator(updatedReleaseNote.getCreator());
+
+            CreatorRequest creatorRequest = new CreatorRequest();
+            creatorRequest.setCreatorId(creator.getMemberId());
+            creatorRequest.setUserName(creator.getUser().getUserName());
+            responseDTO.setCreator(creatorRequest);
+
             responseDTO.setReleaseTitle(updatedReleaseNote.getReleaseTitle());
             responseDTO.setVersion(updatedReleaseNote.getVersion());
             responseDTO.setImportant(updatedReleaseNote.isImportant());
             responseDTO.setPublic(updatedReleaseNote.isPublic());
-            responseDTO.setCreationDate(updatedReleaseNote.getCreationDate());
+            responseDTO.setCreationDate(Timestamp.from(Instant.now()));
 
             return responseDTO;
         } else {
