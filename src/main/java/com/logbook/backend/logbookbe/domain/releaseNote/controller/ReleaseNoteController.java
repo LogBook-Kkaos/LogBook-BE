@@ -31,24 +31,40 @@ public class ReleaseNoteController {
     @Autowired
     private ReleaseNoteService releaseNoteService;
 
+    @Operation(summary = "모든 릴리즈 노트 조회", description = "모든 릴리즈 노트를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = GetReleaseNoteResponse.class))}),
+    })
     @GetMapping
     public ResponseEntity<List<GetReleaseNoteResponse>> getAllReleaseNote(@PathVariable UUID projectId) {
         List<GetReleaseNoteResponse> getAllReleaseNotes = releaseNoteService.getAllReleaseNotes(projectId);
         return ResponseEntity.ok(getAllReleaseNotes);
     }
 
+    @Operation(summary = "특정 릴리즈 노트 조회", description = "릴리즈 노트 아이디로 특정 릴리즈 노트를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = GetReleaseNoteResponse.class))}),
+    })
     @GetMapping("/{releaseNoteId}")
     public ResponseEntity<GetReleaseNoteResponse> getReleaseNoteById(@PathVariable UUID projectId, @PathVariable UUID releaseNoteId) {
         GetReleaseNoteResponse getReleaseNoteById = releaseNoteService.getReleaseNoteById(releaseNoteId);
         return new ResponseEntity<>(getReleaseNoteById, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "릴리즈 노트 생성", description = "릴리즈 노트를 생성합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class))}),
+    })
     @PostMapping
     public UUID createReleaseNote(@RequestBody CreateReleaseNoteRequest releaseNoteDTO, @PathVariable UUID projectId) {
         UUID CreateReleaseNoteRequest = releaseNoteService.createReleaseNote(releaseNoteDTO, projectId);
         return CreateReleaseNoteRequest;
     }
 
+    @Operation(summary = "릴리즈 노트 업데이트", description = "릴리즈 노트를 업데이트합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CreateReleaseNoteRequest.class))}),
+    })
     @PutMapping("/{releaseNoteId}")
     public ResponseEntity<CreateReleaseNoteRequest> updateReleaseNote(@PathVariable("releaseNoteId") UUID releaseNoteId,
                                                          @Valid @RequestBody CreateReleaseNoteRequest updatedReleaseNote) {
@@ -56,11 +72,16 @@ public class ReleaseNoteController {
         return new ResponseEntity<>(updatedReleaseNoteResult, HttpStatus.OK);
     }
 
+    @Operation(summary = "릴리즈 노트 삭제", description = "릴리즈 노트를 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DeleteReleaseNoteResponse.class))}),
+    })
     @DeleteMapping("/{releaseNoteId}")
     public DeleteReleaseNoteResponse deleteReleaseNote(@PathVariable UUID releaseNoteId) {
         return releaseNoteService.deleteReleaseNote(releaseNoteId);
     }
 
+    // ** TODO ** //
 
 //    @GetMapping("/search")
 //    public List<ReleaseNote> searchReleaseNotes(/* 검색 파라미터 */) {
