@@ -57,7 +57,7 @@ public class MemberController {
                                                        @RequestBody Member member) {
         Project project = (Project) projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException());
-        User user = userRepository.findById(member.getUser().getId())
+        User user = userRepository.findById(member.getUser().getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
         Member existingMember = memberRepository.findByUserAndProject(user, project);
