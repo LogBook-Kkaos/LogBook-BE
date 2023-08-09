@@ -134,7 +134,7 @@ public class ReleaseNoteService {
             existingReleaseNote.setVersion(updatedReleaseNoteDTO.getVersion());
             existingReleaseNote.setImportant(updatedReleaseNoteDTO.isImportant());
             existingReleaseNote.setPublic(updatedReleaseNoteDTO.isPublic());
-            existingReleaseNote.setCreationDate(updatedReleaseNoteDTO.getCreationDate());
+            existingReleaseNote.setCreationDate(Timestamp.from(Instant.now()));
 
             ReleaseNote updatedReleaseNote = releaseNoteRepository.save(existingReleaseNote);
 
