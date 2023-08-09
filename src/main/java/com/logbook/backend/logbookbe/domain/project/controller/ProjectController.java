@@ -32,7 +32,7 @@ public class ProjectController {
         List<PublicProjectResponse> projectResponses = new ArrayList<>();
 
         for (Project project : projects) {
-            if (project.getIsPublic().equals("public")) {
+            if (project.isPublic()) {
                 PublicProjectResponse projectResponse = new PublicProjectResponse();
                 projectResponse.setProjectName(project.getProjectName());
                 projectResponse.setProjectDescription(project.getProjectDescription());
@@ -78,7 +78,7 @@ public class ProjectController {
 
         existingProject.setProjectName(updatedProject.getProjectName());
         existingProject.setProjectDescription(updatedProject.getProjectDescription());
-        existingProject.setIsPublic(updatedProject.getIsPublic());
+        existingProject.setPublic(updatedProject.isPublic());
 
         return projectService.updateProject(existingProject);
     }
