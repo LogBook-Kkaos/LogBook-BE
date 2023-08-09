@@ -114,9 +114,9 @@ public class ReleaseNoteService {
             throw new RuntimeException("해당하는 프로젝트가 없습니다.");
         }
 
-        releaseNoteRepository.save(releaseNote);
+        ReleaseNote savedReleaseNote = releaseNoteRepository.save(releaseNote);
 
-        return releaseNote.getReleaseNoteId();
+        return savedReleaseNote.getReleaseNoteId();
 
     }
 
