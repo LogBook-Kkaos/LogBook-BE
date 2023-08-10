@@ -95,11 +95,11 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public List<Issue> filterIssues(
+    public List<GetIssueRequest> filterIssues(
             @PathVariable UUID projectId,
-            @RequestParam(required = false) UUID assignee,
+            @RequestParam(required = false) String assigneeName,
             @RequestParam(required = false) Status status) {
-        return issueService.filterIssues(projectId, assignee, status);
+        return issueService.filterIssues(projectId, assigneeName, status);
     }
 
 }
