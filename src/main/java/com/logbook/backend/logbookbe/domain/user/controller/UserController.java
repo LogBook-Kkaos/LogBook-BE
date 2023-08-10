@@ -1,6 +1,8 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
 
+import com.logbook.backend.logbookbe.domain.member.service.MemberService;
+import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.user.controller.dto.*;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.user.model.User;
@@ -45,6 +47,9 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MemberService memberService;
 
     // 로거 인스턴스 생성
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -112,7 +117,7 @@ public class UserController {
         addTokenToBlackList.execute(oldToken);
         return true;
     }
-  
+
     @PutMapping("/{user_id}")
     @Operation(summary = "사용자 수정", description = "기존 사용자 정보를 수정합니다.")
     @ApiResponses({
@@ -133,7 +138,7 @@ public class UserController {
 
         return userService.updateUser(existingUser);
     }
-  
+
     @Operation(summary = "전체 사용자 조회", description = "모든 사용자 정보를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
@@ -153,7 +158,7 @@ public class UserController {
         }
         return searchResults;
     }
-  
+
     @Operation(summary = "사용자 상세 조회", description = "특정 사용자의 상세 정보를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = User.class))),
@@ -208,4 +213,27 @@ public class UserController {
         userService.deleteUser(userId);
         return new DeleteResponse(userId, "User deleted successfully");
     }
+
+    @GetMapping("/myproject")
+    @Operation(summary = "사용자의 프로젝트 목록 조회", description = "특정 사용자의 프로젝트 목록을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProjectInfoResponse.class)))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public ResponseEntity<List<ProjectInfoResponse>> getUserProjects(@RequestParam("email") String email) {
+        User user = userService.findUserByEmail(email);
+        List<Project> projects = memberService.findMyProject(user.getUserId());
+        List<ProjectInfoResponse> projectInfos = new ArrayList<>();
+
+        for (Project project : projects) {
+            ProjectInfoResponse projectInfo = new ProjectInfoResponse();
+            projectInfo.setProjectId(project.getProjectId());
+            projectInfo.setProjectName(project.getProjectName());
+            projectInfos.add(projectInfo);
+        }
+
+        return ResponseEntity.ok(projectInfos);
+    }
+
 }

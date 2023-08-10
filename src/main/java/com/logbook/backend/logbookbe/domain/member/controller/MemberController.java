@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.member.controller;
 
+import com.logbook.backend.logbookbe.domain.member.controller.dto.CreateMemberRequest;
 import com.logbook.backend.logbookbe.domain.member.controller.dto.EditMemberResponse;
 import com.logbook.backend.logbookbe.domain.member.controller.dto.MemberResponse;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
@@ -7,8 +8,10 @@ import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
 import com.logbook.backend.logbookbe.domain.member.service.MemberService;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
+import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
+import com.logbook.backend.logbookbe.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import com.logbook.backend.logbookbe.domain.member.exception.MemberNotFoundException;
-import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.project.exception.ProjectNotFoundException;
 
 import java.util.ArrayList;
@@ -32,6 +34,13 @@ import java.util.UUID;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ProjectService projectService;
+
     private final MemberRepository memberRepository;
     private ProjectRepository projectRepository;
     private UserRepository userRepository;
@@ -54,22 +63,21 @@ public class MemberController {
     })
     @PostMapping
     public ResponseEntity<MemberResponse> createMember(@PathVariable("project_id") UUID projectId,
-                                                       @RequestBody Member member) {
-        Project project = (Project) projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException());
-        User user = userRepository.findById(member.getUser().getId())
-                .orElseThrow(UserNotFoundException::new);
+                                                       @RequestBody List<CreateMemberRequest> requests) {
+        Project project = projectService.getProjectById(projectId);
 
-        Member existingMember = memberRepository.findByUserAndProject(user, project);
+        for (CreateMemberRequest request : requests) {
+            User user = userService.findUserByEmail(request.getEmail());
+            Member existingMember = memberRepository.findByUserAndProject(user,project);
 
-        if (existingMember != null) {
-            return ResponseEntity.badRequest().body(new MemberResponse(UUID.randomUUID(), "Member already exists for this user and project."));
-        } else {
-            member.setProject(project);
-            member.setUser(user);
-            Member savedMember = memberRepository.save(member);
-            return ResponseEntity.ok(new MemberResponse(savedMember.getMemberId(), "success"));
+            if (existingMember != null) {
+                return ResponseEntity.badRequest().body(new MemberResponse(UUID.randomUUID(), "Member already exists for this user and project."));
+            } else {
+                Member member = Member.createMember(request.getPermissionLevel(), project, user);
+                memberService.createMember(member);
+            }
         }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

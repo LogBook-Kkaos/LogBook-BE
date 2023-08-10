@@ -26,7 +26,6 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) {
-        project.setMemberCount(1);
         return projectRepository.save(project);
     }
 

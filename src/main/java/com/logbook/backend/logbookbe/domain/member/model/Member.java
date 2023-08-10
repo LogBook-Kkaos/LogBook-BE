@@ -41,6 +41,13 @@ public class Member {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReleaseNote> releaseNotes = new ArrayList<>();
 
+    public static Member createMember(PermissionLevel permissionLevel, Project project, User user) {
+        Member member = new Member();
+        member.setPermissionLevel(permissionLevel);
+        member.setProject(project);
+        member.setUser(user);
+        return member;
+    }
 }
 
 
