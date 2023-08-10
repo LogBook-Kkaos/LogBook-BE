@@ -41,4 +41,12 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Issue> issues = new ArrayList<>();
+
+
+    public Project(UUID ProjectId, String projectName, String projectDescription, boolean isPublic) {
+        this.setProjectId(projectId);
+        this.setProjectName(projectName);
+        this.setProjectDescription(projectDescription);
+        this.setPublic(isPublic);
+    }
 }
