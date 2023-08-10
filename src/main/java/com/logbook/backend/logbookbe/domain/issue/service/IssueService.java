@@ -110,9 +110,9 @@ public class IssueService {
             throw new RuntimeException("해당하는 프로젝트가 없습니다.");
         }
 
-        issueRepository.save(issue);
+        Issue savedIssue = issueRepository.save(issue);
 
-        return issue.getIssueId();
+        return savedIssue.getIssueId();
     }
 
     public CreateIssueRequest updateIssue(UUID issueId, CreateIssueRequest updatedIssueDTO) {
