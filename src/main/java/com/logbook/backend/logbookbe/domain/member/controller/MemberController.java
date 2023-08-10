@@ -2,10 +2,12 @@ package com.logbook.backend.logbookbe.domain.member.controller;
 
 import com.logbook.backend.logbookbe.domain.member.controller.dto.CreateMemberRequest;
 import com.logbook.backend.logbookbe.domain.member.controller.dto.EditMemberResponse;
+import com.logbook.backend.logbookbe.domain.member.controller.dto.MemberInfoResponse;
 import com.logbook.backend.logbookbe.domain.member.controller.dto.MemberResponse;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
 import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
 import com.logbook.backend.logbookbe.domain.member.service.MemberService;
+import com.logbook.backend.logbookbe.domain.member.type.PermissionLevel;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
@@ -81,18 +83,20 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EditMemberResponse>> getMembersForProject(@PathVariable("project_id") UUID projectId) {
+    public ResponseEntity<List<MemberInfoResponse>> getMembersForProject(@PathVariable("project_id") UUID projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(ProjectNotFoundException::new);
 
-        List<Member> members = memberRepository.findByProject(project);
+        List<User> members = memberRepository.findUsersByProjectId(projectId);
 
-        List<EditMemberResponse> responses = new ArrayList<>();
-        for (Member member : members) {
-            EditMemberResponse editMemberResponse = new EditMemberResponse();
-            editMemberResponse.setMemberId(member.getMemberId());
-            editMemberResponse.setPermissionLevel(member.getPermissionLevel());
-            responses.add(editMemberResponse);
+        List<MemberInfoResponse> responses = new ArrayList<>();
+        for (User user : members) {
+            MemberInfoResponse memberInfoResponse = new MemberInfoResponse();
+            memberInfoResponse.setUserName(user.getUserName());
+            memberInfoResponse.setEmail(user.getEmail());
+            Member member = memberRepository.findByUserAndProject(user,project);
+            memberInfoResponse.setPermissionLevel(member.getPermissionLevel());
+            responses.add(memberInfoResponse);
         }
 
         return ResponseEntity.ok(responses);
