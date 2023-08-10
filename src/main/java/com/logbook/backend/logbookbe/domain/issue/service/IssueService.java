@@ -21,19 +21,13 @@ import java.util.stream.Collectors;
 public class IssueService {
 
     @Autowired
-    private final IssueRepository issueRepository;
-    @Autowired
-    private final ProjectRepository projectRepository;
+    private IssueRepository issueRepository;
 
     @Autowired
-    private final MemberService memberService;
+    private ProjectRepository projectRepository;
 
     @Autowired
-    public IssueService(IssueRepository issueRepository, ProjectRepository projectRepository, MemberService memberService) {
-        this.issueRepository = issueRepository;
-        this.projectRepository = projectRepository;
-        this.memberService = memberService;
-    }
+    private MemberService memberService;
 
 
     public List<GetIssueRequest> getAllIssues(UUID projectId) {
