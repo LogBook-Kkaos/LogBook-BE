@@ -3,11 +3,14 @@ package com.logbook.backend.logbookbe.domain.releaseNote.model;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.logbook.backend.logbookbe.domain.document.model.Document;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
+import com.logbook.backend.logbookbe.releaseContent.model.ReleaseContent;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -46,6 +49,9 @@ public class ReleaseNote {
 
     @Column(name = "is_public")
     private boolean isPublic;
+
+    @OneToMany(mappedBy = "releaseNote", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReleaseContent> releaseContents = new ArrayList<>();
 
 //    public void setIsImportant(boolean isImportant) {
 //        this.isImportant = isImportant;
