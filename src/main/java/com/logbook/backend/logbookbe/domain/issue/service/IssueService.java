@@ -158,12 +158,14 @@ public class IssueService {
         return new DeleteIssueResponse(issueId, "이슈가 성공적으로 삭제되었습니다.");
     }
 
-    public List<Issue> filterIssues(UUID projectId, UUID assigneeId, Status status) {
+    public List<GetIssueRequest> filterIssues(UUID projectId, String userName, Status status) {
         List<Issue> issues = issueRepository.findByProjectProjectId(projectId);
 
-        if (assigneeId != null) {
+        if (userName != null && !userName.isEmpty()) {
             issues = issues.stream()
-                    .filter(issue -> assigneeId.equals(issue.getAssignee()))
+                    .filter(issue -> issue.getAssignee() != null &&
+                            issue.getAssignee().getUser() != null &&
+                            userName.equalsIgnoreCase(issue.getAssignee().getUser().getUserName()))
                     .collect(Collectors.toList());
         }
 
@@ -173,7 +175,28 @@ public class IssueService {
                     .collect(Collectors.toList());
         }
 
-        return issues;
+        return issues.stream()
+                .map(issue -> {
+                    GetIssueRequest filterIssueDTO = new GetIssueRequest();
+
+                    filterIssueDTO.setIssueId(issue.getIssueId());
+                    filterIssueDTO.setIssueTitle(issue.getIssueTitle());
+                    filterIssueDTO.setIssueDescription(issue.getIssueDescription());
+                    filterIssueDTO.setStatus(issue.getStatus());
+                    filterIssueDTO.setStartDate(issue.getStartDate());
+                    filterIssueDTO.setEndDate(issue.getEndDate());
+
+                    if (issue.getAssignee() != null) {
+                        AssigneeRequest assignee = new AssigneeRequest();
+                        assignee.setAssigneeId(issue.getAssignee().getMemberId());
+                        assignee.setUserName(issue.getAssignee().getUser().getUserName());
+
+                        filterIssueDTO.setAssignee(assignee);
+                    }
+
+                    return filterIssueDTO;
+                })
+                .collect(Collectors.toList());
     }
 
 }
