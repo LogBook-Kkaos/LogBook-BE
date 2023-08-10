@@ -1,6 +1,6 @@
 package com.logbook.backend.logbookbe.releaseContent.controller;
 
-import com.logbook.backend.logbookbe.releaseContent.dto.ReleaseContentDto;
+import com.logbook.backend.logbookbe.releaseContent.controller.dto.ReleaseContentDto;
 import com.logbook.backend.logbookbe.releaseContent.model.ReleaseContent;
 import com.logbook.backend.logbookbe.releaseContent.repository.ReleaseContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

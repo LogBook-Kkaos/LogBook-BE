@@ -1,4 +1,4 @@
-package com.logbook.backend.logbookbe.releaseContent.dto;
+package com.logbook.backend.logbookbe.releaseContent.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
