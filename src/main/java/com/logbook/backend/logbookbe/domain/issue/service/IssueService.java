@@ -6,6 +6,7 @@ import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.repository.IssueRepository;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
+import com.logbook.backend.logbookbe.domain.member.service.MemberService;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import com.logbook.backend.logbookbe.domain.user.model.User;
@@ -23,6 +24,9 @@ public class IssueService {
     private IssueRepository issueRepository;
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private MemberService memberService;
 
     @Autowired
     public IssueService(IssueRepository issueRepository, ProjectRepository projectRepository) {
@@ -88,7 +92,10 @@ public class IssueService {
 
     public UUID createIssue(CreateIssueRequest issueDTO, UUID projectId) {
         Issue issue = new Issue();
-        issue.setAssignee(issueDTO.getAssignee());
+
+        Member assignee = memberService.findMemberById(issueDTO.getAssignee().getAssigneeId());
+        issue.setAssignee(assignee);
+
         issue.setIssueTitle(issueDTO.getIssueTitle());
         issue.setIssueDescription(issueDTO.getIssueDescription());
         issue.setStatus(issueDTO.getStatus());
@@ -113,7 +120,10 @@ public class IssueService {
 
         if (existingIssueOptional.isPresent()) {
             Issue existingIssue = existingIssueOptional.get();
-            existingIssue.setAssignee(updatedIssueDTO.getAssignee());
+
+            Member assignee = memberService.findMemberById(updatedIssueDTO.getAssignee().getAssigneeId());
+            existingIssue.setAssignee(assignee);
+
             existingIssue.setIssueTitle(updatedIssueDTO.getIssueTitle());
             existingIssue.setIssueDescription(updatedIssueDTO.getIssueDescription());
             existingIssue.setStatus(updatedIssueDTO.getStatus());
@@ -124,7 +134,12 @@ public class IssueService {
 
 
             CreateIssueRequest responseDTO = new CreateIssueRequest();
-            responseDTO.setAssignee(updatedIssue.getAssignee());
+
+            AssigneeRequest assigneeRequest = new AssigneeRequest();
+            assigneeRequest.setAssigneeId(assignee.getMemberId());
+            assigneeRequest.setUserName(assignee.getUser().getUserName());
+            responseDTO.setAssignee(assigneeRequest);
+
             responseDTO.setIssueTitle(updatedIssue.getIssueTitle());
             responseDTO.setIssueDescription(updatedIssue.getIssueDescription());
             responseDTO.setStatus(updatedIssue.getStatus());

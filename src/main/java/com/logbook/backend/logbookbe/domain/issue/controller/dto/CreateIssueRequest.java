@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Setter
 public class CreateIssueRequest {
 
-    private Member assignee;
+    private AssigneeRequest assignee;
     private String issueTitle;
     private String issueDescription;
     private Status status;
