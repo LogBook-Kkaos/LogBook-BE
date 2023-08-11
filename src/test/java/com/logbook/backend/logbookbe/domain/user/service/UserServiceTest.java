@@ -1,4 +1,4 @@
-package com.logbook.backend.logbookbe.domain.user;
+package com.logbook.backend.logbookbe.domain.user.service;
 
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
