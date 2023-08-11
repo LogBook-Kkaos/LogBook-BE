@@ -41,7 +41,6 @@ public class Project {
     private List<Document> documents = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-
     private List<Issue> issues = new ArrayList<>();
 
 
@@ -52,6 +51,8 @@ public class Project {
         this.setPublic(isPublic);
     }
 
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReleaseNote> releaseNotes = new ArrayList<>();
 
 }
