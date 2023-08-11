@@ -21,6 +21,8 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
 
     @Query("SELECT DISTINCT m.project FROM Member m WHERE m.user.userId = :userId")
     List<Project> findProjectsByUserId(UUID userId);
+    
+    Member findByMemberId(UUID memberId);
 
     @Query("SELECT DISTINCT m.user FROM Member m WHERE m.project.projectId = :projectId")
     List<User> findUsersByProjectId(UUID projectId);

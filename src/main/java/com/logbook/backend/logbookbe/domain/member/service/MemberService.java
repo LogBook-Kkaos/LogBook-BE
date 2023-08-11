@@ -89,4 +89,9 @@ public class MemberService {
     }
 
     public List<Project> findMyProject(UUID userId) { return memberRepository.findProjectsByUserId(userId); }
+    
+    public Member findMemberById(UUID assigneeId) {
+        Optional<Member> memberOptional = memberRepository.findById(assigneeId);
+        return memberOptional.orElseThrow( () -> new NotFoundException("해당하는 멤버가 없습니다."));
+    }
 }

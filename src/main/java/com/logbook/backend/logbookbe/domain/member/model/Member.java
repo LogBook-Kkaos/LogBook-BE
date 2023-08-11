@@ -48,6 +48,8 @@ public class Member {
         member.setUser(user);
         return member;
     }
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Issue> issues = new ArrayList<>();
 }
 
 

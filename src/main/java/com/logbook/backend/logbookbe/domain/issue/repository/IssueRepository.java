@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface IssueRepository extends JpaRepository<Issue, UUID> {
     List<Issue> findByProjectProjectId(UUID projectId);
 
+    Issue findByIssueId(UUID issueId);
+
 }

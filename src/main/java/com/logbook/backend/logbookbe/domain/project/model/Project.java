@@ -1,6 +1,7 @@
 package com.logbook.backend.logbookbe.domain.project.model;
 
 import com.logbook.backend.logbookbe.domain.document.model.Document;
+import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -40,6 +41,17 @@ public class Project {
     private List<Document> documents = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    private List<Issue> issues = new ArrayList<>();
+
+
+    public Project(UUID ProjectId, String projectName, String projectDescription, boolean isPublic) {
+        this.setProjectId(projectId);
+        this.setProjectName(projectName);
+        this.setProjectDescription(projectDescription);
+        this.setPublic(isPublic);
+    }
+
     private List<ReleaseNote> releaseNotes = new ArrayList<>();
 
 }

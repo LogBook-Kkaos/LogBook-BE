@@ -1,10 +1,11 @@
 package com.logbook.backend.logbookbe.domain.issue.controller;
 
-import com.logbook.backend.logbookbe.domain.issue.controller.dto.IssueDeleteResponse;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.CreateIssueRequest;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.DeleteIssueResponse;
+import com.logbook.backend.logbookbe.domain.issue.controller.dto.GetIssueRequest;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.issue.service.IssueService;
 import com.logbook.backend.logbookbe.domain.issue.type.Status;
-import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +27,8 @@ public class IssueController {
     @Autowired
     private IssueService issueService;
 
+
+
     @GetMapping
     @Operation(summary = "모든 이슈 목록 조회", description = "모든 이슈의 목록을 조회합니다.")
     @ApiResponses({
@@ -31,8 +36,9 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public List<Issue> getAllIssues(@PathVariable UUID projectId) {
-        return issueService.getAllIssues(projectId);
+    public ResponseEntity<List<GetIssueRequest>> getAllIssues(@PathVariable UUID projectId) {
+        List<GetIssueRequest> getAllIssues = issueService.getAllIssues(projectId);
+        return ResponseEntity.ok(getAllIssues);
     }
 
     @GetMapping("/{issueId}")
@@ -42,8 +48,9 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue getIssueById(@PathVariable UUID issueId) {
-        return issueService.getIssueById(issueId);
+    public ResponseEntity<GetIssueRequest> getIssueById(@PathVariable UUID projectId, @PathVariable UUID issueId) {
+        GetIssueRequest getIssueById = issueService.getIssueById(issueId);
+        return new ResponseEntity<>(getIssueById, HttpStatus.CREATED);
     }
 
     @PostMapping
@@ -53,8 +60,9 @@ public class IssueController {
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue createIssue(@PathVariable UUID projectId, @RequestBody Issue issue) {
-        return issueService.createIssue(projectId, issue);
+    public UUID createIssue(@RequestBody CreateIssueRequest issueDTO, @PathVariable UUID projectId) {
+        UUID createdIssueRequest = issueService.createIssue(issueDTO, projectId);
+        return createdIssueRequest;
     }
 
     @PutMapping("/{issueId}")
@@ -65,8 +73,9 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Issue updateIssue(@PathVariable UUID issueId, @RequestBody Issue updatedIssue) {
-        return issueService.updateIssue(issueId, updatedIssue);
+    public ResponseEntity<CreateIssueRequest> updateIssue(@PathVariable UUID issueId, @RequestBody CreateIssueRequest updatedIssue) {
+        CreateIssueRequest updatedIssueResult = issueService.updateIssue(issueId, updatedIssue);
+        return new ResponseEntity<>(updatedIssueResult, HttpStatus.OK);
     }
 
     @DeleteMapping("/{issueId}")
@@ -76,7 +85,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public IssueDeleteResponse deleteIssue(@PathVariable UUID issueId) {
+    public DeleteIssueResponse deleteIssue(@PathVariable UUID issueId) {
         return issueService.deleteIssue(issueId);
     }
 
@@ -86,11 +95,11 @@ public class IssueController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public List<Issue> filterIssues(
+    public List<GetIssueRequest> filterIssues(
             @PathVariable UUID projectId,
-            @RequestParam(required = false) UUID assignee,
+            @RequestParam(required = false) String assigneeName,
             @RequestParam(required = false) Status status) {
-        return issueService.filterIssues(projectId, assignee, status);
+        return issueService.filterIssues(projectId, assigneeName, status);
     }
 
 }
