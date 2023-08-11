@@ -3,6 +3,7 @@ package com.logbook.backend.logbookbe.domain.project.controller;
 import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
 import com.logbook.backend.logbookbe.domain.project.controller.dto.GetProjectResponse;
 import com.logbook.backend.logbookbe.domain.project.controller.dto.PublicProjectResponse;
+import com.logbook.backend.logbookbe.domain.project.controller.dto.UpdateProjectRequest;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
@@ -79,7 +80,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public Project updateProject(@PathVariable("projectId") UUID projectId, @RequestBody Project updatedProject) {
+    public Project updateProject(@PathVariable("projectId") UUID projectId, @RequestBody UpdateProjectRequest updatedProject) {
         Project existingProject = projectService.getProjectById(projectId);
         if (existingProject == null) {
             throw new UserNotFoundException();
@@ -88,6 +89,7 @@ public class ProjectController {
         existingProject.setProjectName(updatedProject.getProjectName());
         existingProject.setProjectDescription(updatedProject.getProjectDescription());
         existingProject.setPublic(updatedProject.isPublic());
+        existingProject.setMemberCount(updatedProject.getMemberCount());
 
         return projectService.updateProject(existingProject);
     }
