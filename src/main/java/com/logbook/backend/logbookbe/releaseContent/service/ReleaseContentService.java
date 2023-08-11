@@ -43,7 +43,8 @@ public class ReleaseContentService {
 
     public List<GetReleaseContentResponse> getAllReleaseContents(UUID releaseNoteId) {
 
-        List<ReleaseContent> releaseContents = releaseContentRepository.findByReleaseNoteReleaseNoteId(releaseNoteId);
+        ReleaseNote releaseNote = releaseNoteRepository.findByReleaseNoteId(releaseNoteId);
+        List<ReleaseContent> releaseContents = releaseContentRepository.findAllByReleaseNote(releaseNote);
         List<GetReleaseContentResponse> releaseContentDTOs = new ArrayList<>();
 
         for (ReleaseContent releaseContent : releaseContents) {
@@ -67,10 +68,19 @@ public class ReleaseContentService {
         return releaseContentDTOs;
     }
 
-    public GetReleaseContentResponse getReleaseContentById(UUID releaseContentId){
-        ReleaseContent releaseContent = releaseContentRepository.findByReleaseContentId(releaseContentId);
+    public GetReleaseContentResponse getReleaseContentById(UUID releaseNoteId, UUID releaseContentId){
 
+
+        ReleaseNote releaseNote = releaseNoteRepository.findByReleaseNoteId(releaseNoteId);
+        Optional<ReleaseContent> releaseContentOptional = releaseContentRepository.findByReleaseContentId(releaseContentId);
+        ReleaseContent releaseContent;
         GetReleaseContentResponse releaseContentDTO = new GetReleaseContentResponse();
+
+        if (releaseContentOptional.isPresent()) {
+            releaseContent = releaseContentOptional.get();
+        } else {
+            throw new RuntimeException("해당하는 릴리즈 콘텐츠가 없습니다.");
+        }
 
         releaseContentDTO.setReleaseContentId(releaseContent.getReleaseContentId());
 
@@ -81,15 +91,16 @@ public class ReleaseContentService {
 
         releaseContentDTO.setDocument(documentDTO);
 
-        releaseContentDTO.setReleaseSummary(releaseContentDTO.getReleaseSummary());
+        releaseContentDTO.setReleaseSummary(releaseContent.getReleaseSummary());
         releaseContentDTO.setCategory(releaseContent.getCategory());
-        releaseContentDTO.setDocumentLink(releaseContentDTO.getDocumentLink());
+        releaseContentDTO.setDocumentLink(releaseContent.getDocumentLink());
 
         return releaseContentDTO;
 
     }
 
 
+    // ** 개별 릴리즈 콘텐츠 서비스 ** //
     public UUID createReleaseContent(CreateReleaseContentRequest releaseContentDTO, UUID releaseNoteId){
         ReleaseContent releaseContent = new ReleaseContent();
         releaseContent.setReleaseSummary(releaseContentDTO.getReleaseSummary());
@@ -115,14 +126,20 @@ public class ReleaseContentService {
 
     }
 
-    public CreateReleaseContentRequest updateReleaseContent(UUID releaseContentId, CreateReleaseContentRequest updatedReleaseContentDTO) {
-        Optional<ReleaseContent> existingReleaseContentOptional = releaseContentRepository.findById(releaseContentId);
+    public CreateReleaseContentRequest updateReleaseContent(UUID releaseNoteId, UUID releaseContentId, CreateReleaseContentRequest updatedReleaseContentDTO) {
+
+        ReleaseNote releaseNote = releaseNoteRepository.findByReleaseNoteId(releaseNoteId);
+
+        Optional<ReleaseContent> existingReleaseContentOptional = releaseContentRepository.findByReleaseContentId(releaseContentId);
 
         if (existingReleaseContentOptional.isPresent()) {
             ReleaseContent existingReleaseContent = existingReleaseContentOptional.get();
 
-            Document document = documentRepository.findByDocumentId(updatedReleaseContentDTO.getDocument().getDocumentId());
-            existingReleaseContent.setDocument(document);
+
+            if (updatedReleaseContentDTO.getDocument() != null) {
+                Document document = documentRepository.findByDocumentId(updatedReleaseContentDTO.getDocument().getDocumentId());
+                existingReleaseContent.setDocument(document);
+            }
 
             existingReleaseContent.setReleaseSummary(updatedReleaseContentDTO.getReleaseSummary());
             existingReleaseContent.setCategory(updatedReleaseContentDTO.getCategory());
@@ -133,10 +150,14 @@ public class ReleaseContentService {
 
             CreateReleaseContentRequest responseDTO = new CreateReleaseContentRequest();
 
-            DocumentRequest documentRequest = new DocumentRequest();
-            documentRequest.setDocumentId(document.getDocumentId());
-            documentRequest.setDocumentTitle(document.getDocumentTitle());
-            responseDTO.setDocument(documentRequest);
+
+            if (updatedReleaseContentDTO.getDocument() != null) {
+                DocumentRequest documentRequest = new DocumentRequest();
+                Document document = documentRepository.findByDocumentId(updatedReleaseContentDTO.getDocument().getDocumentId());
+                documentRequest.setDocumentId(document.getDocumentId());
+                documentRequest.setDocumentTitle(document.getDocumentTitle());
+                responseDTO.setDocument(documentRequest);
+            }
 
             responseDTO.setReleaseSummary(updatedReleaseContentDTO.getReleaseSummary());
             responseDTO.setCategory(updatedReleaseContentDTO.getCategory());
@@ -153,6 +174,68 @@ public class ReleaseContentService {
         releaseContentRepository.deleteById(releaseContentId);
         return new DeleteReleaseContentResponse(releaseContentId, "릴리즈 콘텐츠가 성공적으로 삭제되었습니다.");
     }
+
+
+    // ** 여러 개의 릴리즈 콘텐츠 서비스 ** //
+
+    public List<UUID> createReleaseContents(List<CreateReleaseContentRequest> releaseContentDTOs, UUID releaseNoteId){
+        List<UUID> releaseContentIds = new ArrayList<>();
+
+        ReleaseNote releaseNote = releaseNoteRepository.findByReleaseNoteId(releaseNoteId);
+        if (releaseNote == null) {
+            throw new RuntimeException("해당하는 릴리즈노트가 없습니다.");
+        }
+
+        for (CreateReleaseContentRequest releaseContentDTO : releaseContentDTOs) {
+            ReleaseContent releaseContent = new ReleaseContent();
+            releaseContent.setReleaseSummary(releaseContentDTO.getReleaseSummary());
+
+            Document document = documentRepository.findByDocumentId(releaseContentDTO.getDocument().getDocumentId());
+            releaseContent.setDocument(document);
+
+            releaseContent.setCategory(releaseContentDTO.getCategory());
+            releaseContent.setDocumentLink(releaseContentDTO.getDocumentLink());
+
+            releaseContent.setReleaseNote(releaseNote);
+
+            ReleaseContent savedReleaseContent = releaseContentRepository.save(releaseContent);
+            releaseContentIds.add(savedReleaseContent.getReleaseContentId());
+        }
+
+        return releaseContentIds;
+    }
+
+
+    public List<CreateReleaseContentRequest> updateReleaseContents(UUID releaseNoteId, List<UUID> releaseContentIds, List<CreateReleaseContentRequest> updatedReleaseContentDTOs) {
+        if (releaseContentIds.size() != updatedReleaseContentDTOs.size()) {
+            throw new IllegalArgumentException("릴리즈 콘텐츠 ID와 수정 DTO의 개수가 일치하지 않습니다.");
+        }
+
+        List<CreateReleaseContentRequest> updatedReleaseContents = new ArrayList<>();
+
+        for (int i = 0; i < releaseContentIds.size(); i++) {
+            UUID releaseContentId = releaseContentIds.get(i);
+            CreateReleaseContentRequest updatedReleaseContentDTO = updatedReleaseContentDTOs.get(i);
+            updatedReleaseContents.add(updateReleaseContent(releaseNoteId, releaseContentId, updatedReleaseContentDTO));
+        }
+
+        return updatedReleaseContents;
+    }
+
+
+//    public List<DeleteReleaseContentResponse> deleteReleaseContents(List<UUID> releaseContentIds) {
+//        List<DeleteReleaseContentResponse> deleteResponses = new ArrayList<>();
+//
+//        for (UUID releaseContentId : releaseContentIds) {
+//            releaseContentRepository.deleteById(releaseContentId);
+//            deleteResponses.add(new DeleteReleaseContentResponse(releaseContentId, "릴리즈 콘텐츠가 성공적으로 삭제되었습니다."));
+//        }
+//
+//        return deleteResponses;
+//    }
+
+
+
 
 
 
