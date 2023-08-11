@@ -63,7 +63,7 @@ public class ReleaseNoteServiceTest {
         project.setProjectId(projectId);
 
         user = new User();
-        user.setId(UUID.randomUUID());
+        user.setUserId(UUID.randomUUID());
         user.setUserName("test_user");
 
         member = new Member();
@@ -126,7 +126,7 @@ public class ReleaseNoteServiceTest {
 
     @Test
     public void createReleaseNoteTest() {
-        when(memberService.findMemberById(member.getMemberId())).thenReturn(member);
+        when(memberService.findCreatorById(member.getMemberId())).thenReturn(member);
         when(projectRepository.findByProjectId(projectId)).thenReturn(Optional.of(project));
         when(releaseNoteRepository.save(any(ReleaseNote.class))).thenReturn(releaseNote);
 
@@ -139,7 +139,7 @@ public class ReleaseNoteServiceTest {
     @Test
     public void updateReleaseNoteTest() {
         when(releaseNoteRepository.findById(releaseNote.getReleaseNoteId())).thenReturn(Optional.of(releaseNote));
-        when(memberService.findMemberById(any(UUID.class))).thenReturn(member);
+        when(memberService.findCreatorById(any(UUID.class))).thenReturn(member);
         when(releaseNoteRepository.save(any(ReleaseNote.class))).thenReturn(releaseNote);
 
         CreateReleaseNoteRequest updatedCreateReleaseNoteRequest = new CreateReleaseNoteRequest();
