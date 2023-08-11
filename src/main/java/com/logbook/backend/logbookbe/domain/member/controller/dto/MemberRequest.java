@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateMemberRequest {
+public class MemberRequest {
     private String email;
     private PermissionLevel permissionLevel;
 }

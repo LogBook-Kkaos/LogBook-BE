@@ -1,13 +1,12 @@
 package com.logbook.backend.logbookbe.domain.member.controller;
 
-import com.logbook.backend.logbookbe.domain.member.controller.dto.CreateMemberRequest;
+import com.logbook.backend.logbookbe.domain.member.controller.dto.MemberRequest;
 import com.logbook.backend.logbookbe.domain.member.controller.dto.EditMemberResponse;
 import com.logbook.backend.logbookbe.domain.member.controller.dto.MemberInfoResponse;
 import com.logbook.backend.logbookbe.domain.member.controller.dto.MemberResponse;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
 import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
 import com.logbook.backend.logbookbe.domain.member.service.MemberService;
-import com.logbook.backend.logbookbe.domain.member.type.PermissionLevel;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
 import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
@@ -65,10 +64,10 @@ public class MemberController {
     })
     @PostMapping
     public ResponseEntity<MemberResponse> createMember(@PathVariable("project_id") UUID projectId,
-                                                       @RequestBody List<CreateMemberRequest> requests) {
+                                                       @RequestBody List<MemberRequest> requests) {
         Project project = projectService.getProjectById(projectId);
 
-        for (CreateMemberRequest request : requests) {
+        for (MemberRequest request : requests) {
             User user = userService.findUserByEmail(request.getEmail());
             Member existingMember = memberRepository.findByUserAndProject(user,project);
 
@@ -82,6 +81,12 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "멤버 전체 조회", description = "특정 프로젝트의 모든 멤버를 가져옵니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Member.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping
     public ResponseEntity<List<MemberInfoResponse>> getMembersForProject(@PathVariable("project_id") UUID projectId) {
         Project project = projectRepository.findById(projectId)
@@ -127,20 +132,11 @@ public class MemberController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @PutMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> updateMember(@PathVariable("project_id") UUID projectId,
-                                                       @PathVariable UUID memberId,
-                                                       @RequestBody Member updatedMember) {
-        return memberRepository.findById(memberId)
-                .map(existingMember -> {
-                    if (updatedMember.getPermissionLevel() != null) {
-                        existingMember.setPermissionLevel(updatedMember.getPermissionLevel());
-                    }
-                   
-                    memberRepository.save(existingMember);
-                    return ResponseEntity.ok(new MemberResponse(existingMember.getMemberId(), "success"));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    @PutMapping("/edit")
+    public ResponseEntity<List<MemberResponse>> updateMember(@PathVariable("project_id") UUID projectId,
+                                                       @RequestBody List<MemberRequest> updatedMembers) {
+        List<MemberResponse> updated = memberService.updateMembers(projectId, updatedMembers);
+        return ResponseEntity.ok(updated);
     }
 
     @Operation(summary = "멤버 삭제", description = "특정 멤버를 삭제합니다.")
@@ -149,13 +145,10 @@ public class MemberController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> deleteMember(@PathVariable("project_id") UUID projectId,
-                                                       @PathVariable UUID memberId) {
-        Member existingMember = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
-
-        memberRepository.delete(existingMember);
-        return ResponseEntity.ok(new MemberResponse(existingMember.getMemberId(), "success"));
+    @DeleteMapping("/delete")
+    public ResponseEntity<List<MemberResponse>> deleteMember(@PathVariable("project_id") UUID projectId,
+                                                              @RequestBody List<MemberRequest> deletedMembers) {
+        List<MemberResponse> deleted = memberService.deleteMembers(projectId, deletedMembers);
+        return ResponseEntity.ok(deleted);
     }
 }
