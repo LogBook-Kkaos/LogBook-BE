@@ -7,6 +7,7 @@ import com.logbook.backend.logbookbe.domain.releaseNote.service.ReleaseNoteServi
 import com.logbook.backend.logbookbe.releaseContent.controller.dto.CreateReleaseContentRequest;
 import com.logbook.backend.logbookbe.releaseContent.controller.dto.DeleteReleaseContentResponse;
 import com.logbook.backend.logbookbe.releaseContent.controller.dto.GetReleaseContentResponse;
+import com.logbook.backend.logbookbe.releaseContent.controller.dto.UpdateReleaseContentsRequest;
 import com.logbook.backend.logbookbe.releaseContent.model.ReleaseContent;
 import com.logbook.backend.logbookbe.releaseContent.repository.ReleaseContentRepository;
 import com.logbook.backend.logbookbe.releaseContent.service.ReleaseContentService;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,20 +41,23 @@ public class ReleaseContentController {
 
     @GetMapping("/{releaseContentId}")
     public ResponseEntity<GetReleaseContentResponse> getReleaseContentById(@PathVariable UUID releaseNoteId, @PathVariable UUID releaseContentId) {
-        GetReleaseContentResponse getReleaseContentById = releaseContentService.getReleaseContentById(releaseContentId);
+        GetReleaseContentResponse getReleaseContentById = releaseContentService.getReleaseContentById(releaseNoteId, releaseContentId);
         return new ResponseEntity<GetReleaseContentResponse>(getReleaseContentById, HttpStatus.CREATED);
     }
 
+    // ** 개별 릴리즈 콘텐츠 컨트롤러 ** //
     @PostMapping
     public UUID createReleaseContent(@RequestBody CreateReleaseContentRequest releaseContentDTO, @PathVariable UUID releaseNoteId) {
-        UUID CreateReleaseContentRequest = releaseContentService.createReleaseContent(releaseContentDTO, releaseNoteId);
-        return CreateReleaseContentRequest;
+        UUID releaseContentId = releaseContentService.createReleaseContent(releaseContentDTO, releaseNoteId);
+        return releaseContentId;
     }
 
     @PutMapping("/{releaseContentId}")
-    public ResponseEntity<CreateReleaseContentRequest> updateReleaseContent(@PathVariable("releaseContentId") UUID releaseContentId,
-                                                                      @Valid @RequestBody CreateReleaseContentRequest updatedReleaseContent) {
-        CreateReleaseContentRequest updatedReleaseContentResult = releaseContentService.updateReleaseContent(releaseContentId, updatedReleaseContent);
+    public ResponseEntity<CreateReleaseContentRequest> updateReleaseContent(
+            @PathVariable("releaseNoteId") UUID releaseNoteId,
+            @PathVariable("releaseContentId") UUID releaseContentId,
+            @Valid @RequestBody CreateReleaseContentRequest updatedReleaseContent) {
+        CreateReleaseContentRequest updatedReleaseContentResult = releaseContentService.updateReleaseContent(releaseNoteId, releaseContentId, updatedReleaseContent);
         return new ResponseEntity<CreateReleaseContentRequest>(updatedReleaseContentResult, HttpStatus.OK);
     }
 
@@ -61,5 +66,32 @@ public class ReleaseContentController {
         return releaseContentService.deleteReleaseContent(releaseContentId);
     }
 
+
+    // ** 여러 릴리즈 콘텐츠 컨트롤러 ** //
+
+    @PostMapping("/batchCreate")
+    public ResponseEntity<List<UUID>> createReleaseContents(@RequestBody List<CreateReleaseContentRequest> releaseContentDTOs, @PathVariable UUID releaseNoteId) {
+        List<UUID> releaseContentIds = releaseContentService.createReleaseContents(releaseContentDTOs, releaseNoteId);
+        return new ResponseEntity<>(releaseContentIds, HttpStatus.CREATED);
+    }
+
+
+    @PutMapping("/batchUpdate")
+    public ResponseEntity<List<CreateReleaseContentRequest>> updateReleaseContents(
+            @PathVariable ("releaseNoteId") UUID releaseNoteId,
+            @RequestBody UpdateReleaseContentsRequest updatedReleaseContentRequest) {
+
+        List<CreateReleaseContentRequest> updatedReleaseContents = releaseContentService.updateReleaseContents(releaseNoteId, updatedReleaseContentRequest.getReleaseContentIds(), updatedReleaseContentRequest.getUpdatedReleaseContentDTOs());
+        return new ResponseEntity<>(updatedReleaseContents, HttpStatus.OK);
+    }
+
+//    @DeleteMapping("/batchDelete")
+//    public ResponseEntity<List<DeleteReleaseContentResponse>> deleteReleaseContents(
+//            @RequestBody List<UUID> releaseContentIds) {
+//
+//        List<DeleteReleaseContentResponse> deleteResponses = releaseContentService.deleteReleaseContents(releaseContentIds);
+//
+//        return new ResponseEntity<>(deleteResponses, HttpStatus.OK);
+//    }
 
 }
