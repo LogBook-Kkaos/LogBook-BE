@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.document.controller;
 
+import com.logbook.backend.logbookbe.domain.document.dto.createDocumentFilesRequest;
 import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
 import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
 import com.logbook.backend.logbookbe.domain.document.dto.getDocumentRequest;
@@ -9,10 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,10 +27,14 @@ public class DocumentController {
 
     @Operation(summary = "기술문서 생성", description = "기술문서를 생성합니다.")
     @PostMapping
-    public boolean createDocument(@RequestBody createDocumentRequest documentDTO, @PathVariable UUID projectId) {
-        boolean createdDocumentRequest = documentService.createDocument(documentDTO, projectId);
-        return createdDocumentRequest;
+    public boolean createDocument(@RequestBody createDocumentRequest request, @PathVariable UUID projectId) {
+        List<String> imageUrlList = request.getImageUrlList();
+        UUID documentId = documentService.createDocument(request, projectId);
+        boolean documentFiles = documentService.createDocumentFiles(imageUrlList, documentId);
+
+        return documentFiles;
     }
+
 
     @Operation(summary = "모든 기술문서 조회", description = "모든 기술문서 목록을 가져옵니다.")
     @GetMapping
