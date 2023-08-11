@@ -1,13 +1,14 @@
 package com.logbook.backend.logbookbe.domain.user.service;
 
-import com.logbook.backend.logbookbe.domain.user.model.User;
-import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.logbook.backend.logbookbe.domain.user.model.User;
+import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
 
 @Service
 public class UserService {

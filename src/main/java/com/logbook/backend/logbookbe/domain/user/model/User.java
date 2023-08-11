@@ -1,12 +1,12 @@
 package com.logbook.backend.logbookbe.domain.user.model;
 
-import com.logbook.backend.logbookbe.domain.user.type.Vendor;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.UUID;
+
+import lombok.*;
+import org.hibernate.annotations.Type;
+
+import com.logbook.backend.logbookbe.domain.user.type.Vendor;
 
 @Entity
 @Getter

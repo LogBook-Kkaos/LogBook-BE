@@ -4,18 +4,21 @@ import com.logbook.backend.logbookbe.domain.user.exception.EmailDuplicateExcepti
 import com.logbook.backend.logbookbe.domain.user.exception.PasswordInvalidException;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.user.repository.UserRepository;
+
 import com.logbook.backend.logbookbe.global.jwt.JwtProvider;
 import com.logbook.backend.logbookbe.global.jwt.AuthRole;
 import com.logbook.backend.logbookbe.global.jwt.dto.JwtResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class UserSignupImpl implements UserSignup {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;

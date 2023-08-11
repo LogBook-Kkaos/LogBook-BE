@@ -1,14 +1,13 @@
 package com.logbook.backend.logbookbe.domain.user.controller;
 
-
 import com.logbook.backend.logbookbe.domain.member.service.MemberService;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.user.controller.dto.*;
 import com.logbook.backend.logbookbe.domain.user.exception.UserNotFoundException;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import com.logbook.backend.logbookbe.domain.auth.usecase.AddTokenToBlackList;
-
 import com.logbook.backend.logbookbe.global.error.ErrorResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,19 +23,16 @@ import com.logbook.backend.logbookbe.domain.user.service.UserService;
 import com.logbook.backend.logbookbe.domain.user.usecase.UserLogin;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.UUID;
-
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,9 +46,6 @@ public class UserController {
 
     @Autowired
     private MemberService memberService;
-
-    // 로거 인스턴스 생성
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserLogin userLogin;
     private final UserSignup userSignup;
