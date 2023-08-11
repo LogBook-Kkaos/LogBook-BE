@@ -1,23 +1,15 @@
 package com.logbook.backend.logbookbe.domain.releaseNote.service;
 
-import com.logbook.backend.logbookbe.domain.document.dto.createDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.dto.getDocumentRequest;
-import com.logbook.backend.logbookbe.domain.document.model.Document;
-import com.logbook.backend.logbookbe.domain.issue.model.Issue;
-import com.logbook.backend.logbookbe.domain.issue.type.Status;
 import com.logbook.backend.logbookbe.domain.member.model.Member;
-import com.logbook.backend.logbookbe.domain.member.repository.MemberRepository;
 import com.logbook.backend.logbookbe.domain.member.service.MemberService;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.repository.ProjectRepository;
-import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.CreateReleaseNoteRequest;
-import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.CreatorRequest;
-import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.DeleteReleaseNoteResponse;
-import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.GetReleaseNoteResponse;
+import com.logbook.backend.logbookbe.domain.releaseNote.controller.dto.*;
 import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
 import com.logbook.backend.logbookbe.domain.releaseNote.repository.ReleaseNoteRepository;
 import com.logbook.backend.logbookbe.domain.user.model.User;
+import com.logbook.backend.logbookbe.releaseContent.model.ReleaseContent;
+import com.logbook.backend.logbookbe.releaseContent.repository.ReleaseContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
@@ -25,7 +17,6 @@ import org.webjars.NotFoundException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ReleaseNoteService {
@@ -38,6 +29,9 @@ public class ReleaseNoteService {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private ReleaseContentRepository releaseContentRepository;
 
     public List<GetReleaseNoteResponse> getAllReleaseNotes(UUID projectId) {
         List<ReleaseNote> releaseNotes = releaseNoteRepository.findByProjectProjectId(projectId);
@@ -62,6 +56,21 @@ public class ReleaseNoteService {
             releaseNoteDTO.setCreationDate(releaseNote.getCreationDate());
             releaseNoteDTO.setImportant(releaseNote.isImportant());
             releaseNoteDTO.setPublic(releaseNote.isPublic());
+
+            List<ReleaseContent> releaseContents = releaseContentRepository.findByReleaseNoteReleaseNoteId(releaseNote.getReleaseNoteId());
+            List<ReleaseContentRequest> releaseContentDTOs = new ArrayList<>();
+
+            for (ReleaseContent releaseContent : releaseContents) {
+                ReleaseContentRequest releaseContentDTO = new ReleaseContentRequest();
+                releaseContentDTO.setReleaseContentId(releaseContent.getReleaseContentId());
+                releaseContentDTO.setReleaseSummary(releaseContent.getReleaseSummary());
+                releaseContentDTO.setCategory(releaseContent.getCategory());
+                releaseContentDTO.setDocumentLink(releaseContent.getDocumentLink());
+
+                releaseContentDTOs.add(releaseContentDTO);
+            }
+
+            releaseNoteDTO.setReleaseContents(releaseContentDTOs);
 
             releaseNoteDTOs.add(releaseNoteDTO);
         }
@@ -90,6 +99,21 @@ public class ReleaseNoteService {
         releaseNoteDTO.setCreationDate(releaseNote.getCreationDate());
         releaseNoteDTO.setImportant(releaseNote.isImportant());
         releaseNoteDTO.setPublic(releaseNote.isPublic());
+
+        List<ReleaseContent> releaseContents = releaseContentRepository.findByReleaseNoteReleaseNoteId(releaseNote.getReleaseNoteId());
+        List<ReleaseContentRequest> releaseContentDTOs = new ArrayList<>();
+
+        for (ReleaseContent releaseContent : releaseContents) {
+            ReleaseContentRequest releaseContentDTO = new ReleaseContentRequest();
+            releaseContentDTO.setReleaseContentId(releaseContent.getReleaseContentId());
+            releaseContentDTO.setReleaseSummary(releaseContent.getReleaseSummary());
+            releaseContentDTO.setCategory(releaseContent.getCategory());
+            releaseContentDTO.setDocumentLink(releaseContent.getDocumentLink());
+
+            releaseContentDTOs.add(releaseContentDTO);
+        }
+
+        releaseNoteDTO.setReleaseContents(releaseContentDTOs);
 
         return releaseNoteDTO;
 
