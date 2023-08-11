@@ -88,7 +88,7 @@ public class IssueService {
     public UUID createIssue(CreateIssueRequest issueDTO, UUID projectId) {
         Issue issue = new Issue();
 
-        Member assignee = memberService.findMemberById(issueDTO.getAssignee().getAssigneeId());
+        Member assignee = memberService.findAssigneeById(issueDTO.getAssignee().getAssigneeId());
         issue.setAssignee(assignee);
 
         issue.setIssueTitle(issueDTO.getIssueTitle());
@@ -116,7 +116,7 @@ public class IssueService {
         if (existingIssueOptional.isPresent()) {
             Issue existingIssue = existingIssueOptional.get();
 
-            Member assignee = memberService.findMemberById(updatedIssueDTO.getAssignee().getAssigneeId());
+            Member assignee = memberService.findAssigneeById(updatedIssueDTO.getAssignee().getAssigneeId());
             existingIssue.setAssignee(assignee);
 
             existingIssue.setIssueTitle(updatedIssueDTO.getIssueTitle());

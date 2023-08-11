@@ -102,7 +102,7 @@ public class IssueServiceTest {
         issueDTO.setEndDate(sampleIssue.getEndDate());
 
         when(projectRepository.findByProjectId(sampleProject.getProjectId())).thenReturn(Optional.of(sampleProject));
-        when(memberService.findMemberById(assigneeDTO.getAssigneeId())).thenReturn(sampleMember);
+        when(memberService.findAssigneeById(assigneeDTO.getAssigneeId())).thenReturn(sampleMember);
         when(issueRepository.save(any(Issue.class))).thenReturn(sampleIssue);
 
         UUID result = issueService.createIssue(issueDTO, sampleProject.getProjectId());

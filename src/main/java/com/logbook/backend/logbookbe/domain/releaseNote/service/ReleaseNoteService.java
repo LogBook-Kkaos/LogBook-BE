@@ -99,7 +99,7 @@ public class ReleaseNoteService {
         ReleaseNote releaseNote = new ReleaseNote();
         releaseNote.setReleaseTitle(releaseNoteDTO.getReleaseTitle());
 
-        Member creator = memberService.findMemberById(releaseNoteDTO.getCreator().getCreatorId());
+        Member creator = memberService.findCreatorById(releaseNoteDTO.getCreator().getCreatorId());
         releaseNote.setCreator(creator);
 
         releaseNote.setVersion(releaseNoteDTO.getVersion());
@@ -126,7 +126,7 @@ public class ReleaseNoteService {
         if (existingReleaseNoteOptional.isPresent()) {
             ReleaseNote existingReleaseNote = existingReleaseNoteOptional.get();
 
-            Member creator = memberService.findMemberById(updatedReleaseNoteDTO.getCreator().getCreatorId());
+            Member creator = memberService.findCreatorById(updatedReleaseNoteDTO.getCreator().getCreatorId());
             existingReleaseNote.setCreator(creator);
 
 
