@@ -3,6 +3,7 @@ package com.logbook.backend.logbookbe.domain.member.model;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.member.type.PermissionLevel;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
+import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
 import com.logbook.backend.logbookbe.domain.user.model.User;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,8 +18,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor
 public class Member {
     @Id
     @GeneratedValue
@@ -36,6 +37,9 @@ public class Member {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReleaseNote> releaseNotes = new ArrayList<>();
 
     public static Member createMember(PermissionLevel permissionLevel, Project project, User user) {
         Member member = new Member();

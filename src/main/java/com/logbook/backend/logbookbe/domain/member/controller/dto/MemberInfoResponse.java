@@ -6,7 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateMemberRequest {
+public class MemberInfoResponse {
+    private String userName;
     private String email;
     private PermissionLevel permissionLevel;
 }
