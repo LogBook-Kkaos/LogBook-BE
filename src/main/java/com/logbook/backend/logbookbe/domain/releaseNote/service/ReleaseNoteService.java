@@ -48,14 +48,18 @@ public class ReleaseNoteService {
             releaseNoteDTO.setReleaseNoteId(releaseNote.getReleaseNoteId());
 
             Member creator = releaseNote.getCreator();
-            CreatorRequest creatorDTO = new CreatorRequest();
-            creatorDTO.setCreatorId(creator.getMemberId());
+            if (creator != null) {
+                CreatorRequest creatorDTO = new CreatorRequest();
+                creatorDTO.setCreatorId(creator.getMemberId());
 
-            User user = creator.getUser();
-            String username = user.getUserName();
-            creatorDTO.setUserName(username);
+                User user = creator.getUser();
+                if (user != null) {
+                    String username = user.getUserName();
+                    creatorDTO.setUserName(username);
+                }
 
-            releaseNoteDTO.setCreator(creatorDTO);
+                releaseNoteDTO.setCreator(creatorDTO);
+            }
 
             releaseNoteDTO.setReleaseTitle(releaseNote.getReleaseTitle());
             releaseNoteDTO.setVersion(releaseNote.getVersion());
@@ -76,14 +80,18 @@ public class ReleaseNoteService {
         releaseNoteDTO.setReleaseNoteId(releaseNote.getReleaseNoteId());
 
         Member creator = releaseNote.getCreator();
-        CreatorRequest creatorDTO = new CreatorRequest();
-        creatorDTO.setCreatorId(creator.getMemberId());
+        if (creator != null) {
+            CreatorRequest creatorDTO = new CreatorRequest();
+            creatorDTO.setCreatorId(creator.getMemberId());
 
-        User user = creator.getUser();
-        String username = user.getUserName();
-        creatorDTO.setUserName(username);
+            User user = creator.getUser();
+            if (user != null) {
+                String username = user.getUserName();
+                creatorDTO.setUserName(username);
+            }
 
-        releaseNoteDTO.setCreator(creatorDTO);
+            releaseNoteDTO.setCreator(creatorDTO);
+        }
 
         releaseNoteDTO.setReleaseTitle(releaseNote.getReleaseTitle());
         releaseNoteDTO.setVersion(releaseNote.getVersion());

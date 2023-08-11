@@ -16,5 +16,7 @@ public interface ReleaseNoteRepository extends JpaRepository<ReleaseNote, UUID> 
 
     ReleaseNote findByReleaseNoteId(UUID releaseNoteId);
 
+    Optional<ReleaseNote> findById(UUID releaseNoteId);
+
 }
 
