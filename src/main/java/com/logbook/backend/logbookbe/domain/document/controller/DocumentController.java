@@ -44,6 +44,6 @@ public class DocumentController {
     @GetMapping("/{documentId}")
     public ResponseEntity<getDocumentRequest> getDocument(@PathVariable UUID projectId, @PathVariable UUID documentId) {
         getDocumentRequest getDocument = documentService.getDocument(documentId);
-        return new ResponseEntity<>(getDocument, HttpStatus.CREATED);
+        return new ResponseEntity<getDocumentRequest>(getDocument, HttpStatus.CREATED);
     }
 }
