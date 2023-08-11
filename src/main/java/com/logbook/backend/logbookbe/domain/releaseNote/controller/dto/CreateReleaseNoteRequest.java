@@ -1,6 +1,5 @@
 package com.logbook.backend.logbookbe.domain.releaseNote.controller.dto;
 
-import com.logbook.backend.logbookbe.domain.member.model.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,5 +20,7 @@ public class CreateReleaseNoteRequest {
     private boolean isImportant;
 
     private boolean isPublic;
+
+    private ReleaseContentRequest releaseContents;
 
 }
