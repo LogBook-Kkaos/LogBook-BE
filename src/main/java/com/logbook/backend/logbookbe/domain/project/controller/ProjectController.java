@@ -1,6 +1,7 @@
 package com.logbook.backend.logbookbe.domain.project.controller;
 
 import com.logbook.backend.logbookbe.domain.project.controller.dto.DeleteResponse;
+import com.logbook.backend.logbookbe.domain.project.controller.dto.GetProjectResponse;
 import com.logbook.backend.logbookbe.domain.project.controller.dto.PublicProjectResponse;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.project.service.ProjectService;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -50,6 +53,12 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+    public ResponseEntity<GetProjectResponse> getProject(@PathVariable("projectId") UUID projectId) {
+        GetProjectResponse projectDTO = projectService.getProject(projectId);
+        return new ResponseEntity<GetProjectResponse>(projectDTO,HttpStatus.OK);
+    }
+
+
     public Project getProjectById(@PathVariable("projectId") UUID projectId) {
         return projectService.getProjectById(projectId);
     }
