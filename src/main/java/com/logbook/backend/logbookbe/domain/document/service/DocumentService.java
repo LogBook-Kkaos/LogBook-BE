@@ -41,12 +41,20 @@ public class DocumentService {
 
     public List<getAllDocumentRequest> getAllDocuments(UUID projectId) {
         List<Document> documents = documentRepository.findByProjectProjectId(projectId);
+        System.out.println(documents);
         List<getAllDocumentRequest> documentDTOs = new ArrayList<>();
         for (Document document : documents) {
             getAllDocumentRequest documentDTO = new getAllDocumentRequest();
             documentDTO.setDocumentId(document.getDocumentId());
             documentDTO.setDocumentTitle(document.getDocumentTitle());
             documentDTO.setCreationDate(document.getCreationDate());
+
+            List<DocumentFile> documentFiles = document.getDocumentFiles();
+            if (!documentFiles.isEmpty()) {
+                DocumentFile firstDocumentFile = documentFiles.get(0);
+                documentDTO.setImageUrl(firstDocumentFile.getImageUrl());
+            }
+            System.out.println(documentDTO);
             documentDTOs.add(documentDTO);
         }
         return documentDTOs;
@@ -59,7 +67,6 @@ public class DocumentService {
         documentDTO.setDocumentId(document.getDocumentId());
         documentDTO.setDocumentTitle(document.getDocumentTitle());
         documentDTO.setDocumentContent(document.getDocumentContent());
-        documentDTO.setCreationDate(document.getCreationDate());
 
         return documentDTO;
 
@@ -101,6 +108,24 @@ public class DocumentService {
             document.getDocumentFiles().addAll(documentFiles);
             return true;
 
+        } else {
+            throw new RuntimeException("잘못된 document입니다.");
+        }
+    }
+    public boolean deleteDocument(UUID documentId) {
+        Optional<Document> documentOptional = documentRepository.findByDocumentId(documentId);
+
+        if (documentOptional.isPresent()) {
+            Document document = documentOptional.get();
+            List<DocumentFile> documentFiles = document.getDocumentFiles();
+            Project project = document.getProject();
+
+            if (documentFiles != null && !documentFiles.isEmpty()) {
+                documentFilesRepository.deleteAll(documentFiles);
+            }
+            project.getDocuments().remove(document);
+            documentRepository.delete(document);
+            return true;
         } else {
             throw new RuntimeException("잘못된 document입니다.");
         }

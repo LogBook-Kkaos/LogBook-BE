@@ -40,6 +40,7 @@ public class DocumentController {
     @GetMapping
     public ResponseEntity<List<getAllDocumentRequest>> getAllDocument(@PathVariable UUID projectId) {
         List<getAllDocumentRequest> getAllDocuments = documentService.getAllDocuments(projectId);
+        System.out.println(getAllDocuments);
         return ResponseEntity.ok(getAllDocuments);
     }
 
@@ -48,5 +49,17 @@ public class DocumentController {
     public ResponseEntity<getDocumentRequest> getDocument(@PathVariable UUID projectId, @PathVariable UUID documentId) {
         getDocumentRequest getDocument = documentService.getDocument(documentId);
         return new ResponseEntity<getDocumentRequest>(getDocument, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "기술문서 삭제", description = "특정 기술문서를 삭제합니다.")
+    @DeleteMapping("/{documentId}")
+    public ResponseEntity<String> deleteDocument(@PathVariable UUID projectId, @PathVariable UUID documentId) {
+        boolean deleted = documentService.deleteDocument(documentId);
+
+        if (deleted) {
+            return ResponseEntity.ok("Document deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete document");
+        }
     }
 }
