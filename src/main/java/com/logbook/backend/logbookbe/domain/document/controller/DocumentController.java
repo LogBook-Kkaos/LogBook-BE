@@ -62,4 +62,15 @@ public class DocumentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete document");
         }
     }
+
+    @Operation(summary = "기술문서 수정", description = "기술문서를 수정합니다.")
+    @PutMapping("/{documentId}")
+    public boolean updateDocument(@RequestBody createDocumentRequest request, @PathVariable UUID projectId, @PathVariable UUID documentId) {
+        List<String> imageUrlList = request.getImageUrlList();
+        boolean updated = documentService.updateDocument(documentId, request);
+        boolean documentFiles = documentService.updateDocumentFiles(documentId, imageUrlList);
+
+        return updated&&documentFiles;
+    }
+
 }

@@ -41,7 +41,6 @@ public class DocumentService {
 
     public List<getAllDocumentRequest> getAllDocuments(UUID projectId) {
         List<Document> documents = documentRepository.findByProjectProjectId(projectId);
-        System.out.println(documents);
         List<getAllDocumentRequest> documentDTOs = new ArrayList<>();
         for (Document document : documents) {
             getAllDocumentRequest documentDTO = new getAllDocumentRequest();
@@ -54,7 +53,6 @@ public class DocumentService {
                 DocumentFile firstDocumentFile = documentFiles.get(0);
                 documentDTO.setImageUrl(firstDocumentFile.getImageUrl());
             }
-            System.out.println(documentDTO);
             documentDTOs.add(documentDTO);
         }
         return documentDTOs;
@@ -125,6 +123,48 @@ public class DocumentService {
             }
             project.getDocuments().remove(document);
             documentRepository.delete(document);
+            return true;
+        } else {
+            throw new RuntimeException("잘못된 document입니다.");
+        }
+    }
+
+    public boolean updateDocument(UUID documentId, createDocumentRequest documentDto) {
+        Optional<Document> documentOptional = documentRepository.findByDocumentId(documentId);
+
+        if (documentOptional.isPresent()) {
+            Document document = documentOptional.get();
+            document.setDocumentTitle(documentDto.getDocumentTitle());
+            document.setDocumentContent(documentDto.getDocumentContent());
+            document.setCreationDate(Timestamp.from(Instant.now()));
+            documentRepository.save(document);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean updateDocumentFiles(UUID documentId, List<String> imageUrlList) {
+        Optional<Document> documentOptional = documentRepository.findByDocumentId(documentId);
+
+        if (documentOptional.isPresent()) {
+            Document document = documentOptional.get();
+            List<DocumentFile> documentFiles = document.getDocumentFiles();
+
+            if (documentFiles != null && !documentFiles.isEmpty()) {
+                documentFilesRepository.deleteAll(documentFiles);
+            }
+
+            List<DocumentFile> newDocumentFiles = new ArrayList<>();
+            for (String imageUrl : imageUrlList) {
+                DocumentFile documentFile = new DocumentFile();
+                documentFile.setImageUrl(imageUrl);
+                documentFile.setDocument(document);
+                newDocumentFiles.add(documentFile);
+            }
+            newDocumentFiles = documentFilesRepository.saveAll(newDocumentFiles);
+            document.setDocumentFiles(newDocumentFiles);
+
             return true;
         } else {
             throw new RuntimeException("잘못된 document입니다.");
