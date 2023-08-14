@@ -9,8 +9,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ReleaseContentRequest {
-
-    private UUID releaseContentId;
     private String releaseSummary;
     private Category category;
     private String documentLink;
