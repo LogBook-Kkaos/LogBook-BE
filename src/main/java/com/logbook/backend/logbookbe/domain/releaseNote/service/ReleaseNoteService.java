@@ -62,7 +62,6 @@ public class ReleaseNoteService {
 
             for (ReleaseContent releaseContent : releaseContents) {
                 ReleaseContentRequest releaseContentDTO = new ReleaseContentRequest();
-                releaseContentDTO.setReleaseContentId(releaseContent.getReleaseContentId());
                 releaseContentDTO.setReleaseSummary(releaseContent.getReleaseSummary());
                 releaseContentDTO.setCategory(releaseContent.getCategory());
                 releaseContentDTO.setDocumentLink(releaseContent.getDocumentLink());
@@ -105,7 +104,6 @@ public class ReleaseNoteService {
 
         for (ReleaseContent releaseContent : releaseContents) {
             ReleaseContentRequest releaseContentDTO = new ReleaseContentRequest();
-            releaseContentDTO.setReleaseContentId(releaseContent.getReleaseContentId());
             releaseContentDTO.setReleaseSummary(releaseContent.getReleaseSummary());
             releaseContentDTO.setCategory(releaseContent.getCategory());
             releaseContentDTO.setDocumentLink(releaseContent.getDocumentLink());
@@ -139,6 +137,15 @@ public class ReleaseNoteService {
         }
 
         ReleaseNote savedReleaseNote = releaseNoteRepository.save(releaseNote);
+
+        for (ReleaseContentRequest contentRequest : releaseNoteDTO.getReleaseContents()) {
+            ReleaseContent content = new ReleaseContent();
+            content.setReleaseSummary(contentRequest.getReleaseSummary());
+            content.setCategory(contentRequest.getCategory());
+            content.setDocumentLink(contentRequest.getDocumentLink());
+            content.setReleaseNote(savedReleaseNote);
+            releaseContentRepository.save(content);
+        }
 
         return savedReleaseNote.getReleaseNoteId();
 
