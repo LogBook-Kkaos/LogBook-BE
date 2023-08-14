@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +22,6 @@ public class CreateReleaseNoteRequest {
 
     private boolean isPublic;
 
-    private ReleaseContentRequest releaseContents;
+    private List<ReleaseContentRequest> releaseContents;
 
 }
