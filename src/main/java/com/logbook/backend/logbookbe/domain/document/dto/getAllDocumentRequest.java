@@ -16,4 +16,6 @@ public class getAllDocumentRequest {
 
     private Timestamp creationDate;
 
+    private String imageUrl;
+
 }

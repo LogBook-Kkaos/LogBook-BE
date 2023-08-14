@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.document.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.logbook.backend.logbookbe.domain.project.model.Project;
 import com.logbook.backend.logbookbe.domain.user.type.Vendor;
 import com.logbook.backend.logbookbe.releaseContent.model.ReleaseContent;
@@ -34,10 +35,12 @@ public class Document{
     private Timestamp creationDate;
 
     @OneToMany(mappedBy = "document")
-    private List<DocumentFile> documentFiles;
+    @JsonIgnoreProperties("documents")
+    private List<DocumentFile> documentFiles= new ArrayList<>();;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
+    @JsonIgnoreProperties("documents")
     private Project project;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)

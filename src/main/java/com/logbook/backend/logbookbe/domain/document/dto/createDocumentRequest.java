@@ -16,6 +16,6 @@ public class createDocumentRequest {
 
     private String documentContent;
 
-    private Timestamp creationDate;
+    List<String> imageUrlList;
 
 }

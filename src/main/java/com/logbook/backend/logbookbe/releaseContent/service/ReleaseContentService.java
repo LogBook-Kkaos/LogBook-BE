@@ -105,7 +105,8 @@ public class ReleaseContentService {
         ReleaseContent releaseContent = new ReleaseContent();
         releaseContent.setReleaseSummary(releaseContentDTO.getReleaseSummary());
 
-        Document document = documentRepository.findByDocumentId(releaseContentDTO.getDocument().getDocumentId());
+        Optional<Document> documentopt = documentRepository.findByDocumentId(releaseContentDTO.getDocument().getDocumentId());
+        Document document = documentopt.get();
         releaseContent.setDocument(document);
 
         releaseContent.setCategory(releaseContentDTO.getCategory());
@@ -137,7 +138,8 @@ public class ReleaseContentService {
 
 
             if (updatedReleaseContentDTO.getDocument() != null) {
-                Document document = documentRepository.findByDocumentId(updatedReleaseContentDTO.getDocument().getDocumentId());
+                Optional<Document> documentopt = documentRepository.findByDocumentId(updatedReleaseContentDTO.getDocument().getDocumentId());
+                Document document = documentopt.get();
                 existingReleaseContent.setDocument(document);
             }
 
@@ -153,7 +155,8 @@ public class ReleaseContentService {
 
             if (updatedReleaseContentDTO.getDocument() != null) {
                 DocumentRequest documentRequest = new DocumentRequest();
-                Document document = documentRepository.findByDocumentId(updatedReleaseContentDTO.getDocument().getDocumentId());
+                Optional<Document> documentopt = documentRepository.findByDocumentId(updatedReleaseContentDTO.getDocument().getDocumentId());
+                Document document = documentopt.get();
                 documentRequest.setDocumentId(document.getDocumentId());
                 documentRequest.setDocumentTitle(document.getDocumentTitle());
                 responseDTO.setDocument(documentRequest);
@@ -190,7 +193,8 @@ public class ReleaseContentService {
             ReleaseContent releaseContent = new ReleaseContent();
             releaseContent.setReleaseSummary(releaseContentDTO.getReleaseSummary());
 
-            Document document = documentRepository.findByDocumentId(releaseContentDTO.getDocument().getDocumentId());
+            Optional<Document> documentopt = documentRepository.findByDocumentId(releaseContentDTO.getDocument().getDocumentId());
+            Document document = documentopt.get();
             releaseContent.setDocument(document);
 
             releaseContent.setCategory(releaseContentDTO.getCategory());

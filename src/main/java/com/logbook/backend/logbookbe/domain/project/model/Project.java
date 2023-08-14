@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.logbook.backend.logbookbe.domain.document.model.Document;
 import com.logbook.backend.logbookbe.domain.issue.model.Issue;
 import com.logbook.backend.logbookbe.domain.releaseNote.model.ReleaseNote;
@@ -38,6 +39,7 @@ public class Project {
     private Integer memberCount;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("project")
     private List<Document> documents = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)

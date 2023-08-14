@@ -17,9 +17,4 @@ public class getDocumentRequest {
 
     private String documentContent;
 
-    private List<DocumentFile> documentFiles;
-
-    private Timestamp creationDate;
-
-
 }
