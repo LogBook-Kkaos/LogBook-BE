@@ -114,7 +114,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{memberId}")
-    public ResponseEntity<EditMemberResponse> getMember(@PathVariable("project_id") UUID projectId,
+    public ResponseEntity<EditMemberResponse> getMembers(@PathVariable("project_id") UUID projectId,
                                                         @PathVariable UUID memberId) {
         return memberRepository.findById(memberId)
                 .map(existingMember -> {
@@ -126,6 +126,39 @@ public class MemberController {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
+    @Operation(summary = "멤버 권한 확인", description = "특정 멤버의 권한을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Member.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/permission")
+    public MemberInfoResponse getMember(@PathVariable("project_id") UUID projectId, @RequestParam("email") String email) {
+        User user = userService.findUserByEmail(email);
+        Project project = projectService.getProjectById(projectId);
+        Member member = memberRepository.findByUserAndProject(user, project);
+        MemberInfoResponse response = new MemberInfoResponse();
+        response.setUserName(user.getUserName());
+        response.setEmail(user.getEmail());
+        response.setPermissionLevel(member.getPermissionLevel());
+
+        return response;
+    }
+
+    @Operation(summary = "멤버 ID 확인", description = "특정 멤버의 ID를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Member.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/info")
+    public UUID getMemberId(@PathVariable("project_id") UUID projectId, @RequestParam("email") String email) {
+        User user = userService.findUserByEmail(email);
+        Project project = projectService.getProjectById(projectId);
+        Member member = memberRepository.findByUserAndProject(user, project);
+        return member.getMemberId();
+    }
+    
     @Operation(summary = "멤버 업데이트", description = "기존 멤버 정보를 업데이트합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Member.class))),
