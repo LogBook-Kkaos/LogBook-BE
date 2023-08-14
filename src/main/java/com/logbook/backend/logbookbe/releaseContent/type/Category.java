@@ -10,6 +10,7 @@ public enum Category {
     Fixed,
     Feature,
     Deprecated,
-    Changed
+    Changed,
+    General
 
 }
