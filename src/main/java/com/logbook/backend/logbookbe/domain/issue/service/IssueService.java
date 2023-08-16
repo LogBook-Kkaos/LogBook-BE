@@ -194,4 +194,113 @@ public class IssueService {
                 .collect(Collectors.toList());
     }
 
+    public CreateIssueRequest updateIssueStatus(UUID issueId, UpdateIssueStatusRequest updateIssueStatusDTO) {
+        Optional<Issue> existingIssueOptional = issueRepository.findById(issueId);
+
+        if (existingIssueOptional.isPresent()) {
+            Issue existingIssue = existingIssueOptional.get();
+            existingIssue.setStatus(updateIssueStatusDTO.getStatus());
+            Issue updatedIssue = issueRepository.save(existingIssue);
+
+            CreateIssueRequest responseDTO = new CreateIssueRequest();
+
+            AssigneeRequest assigneeRequest = new AssigneeRequest();
+            assigneeRequest.setAssigneeId(updatedIssue.getAssignee().getMemberId());
+            assigneeRequest.setUserName(updatedIssue.getAssignee().getUser().getUserName());
+            responseDTO.setAssignee(assigneeRequest);
+
+            responseDTO.setIssueTitle(updatedIssue.getIssueTitle());
+            responseDTO.setIssueDescription(updatedIssue.getIssueDescription());
+            responseDTO.setStatus(updatedIssue.getStatus());
+            responseDTO.setStartDate(updatedIssue.getStartDate());
+            responseDTO.setEndDate(updatedIssue.getEndDate());
+
+            return responseDTO;
+        } else {
+            throw new NotFoundException("해당하는 이슈가 없습니다.");
+        }
+    }
+
+    public CreateIssueRequest updateIssueAssignee(UUID issueId, UpdateIssueAssigneeRequest updateIssueAssigneeDTO) {
+        Optional<Issue> existingIssueOptional = issueRepository.findById(issueId);
+
+        if (existingIssueOptional.isPresent()) {
+            Issue existingIssue = existingIssueOptional.get();
+            Member assignee = memberService.findAssigneeById(updateIssueAssigneeDTO.getAssigneeId());
+            existingIssue.setAssignee(assignee);
+            Issue updatedIssue = issueRepository.save(existingIssue);
+
+            CreateIssueRequest responseDTO = new CreateIssueRequest();
+
+            AssigneeRequest assigneeRequest = new AssigneeRequest();
+            assigneeRequest.setAssigneeId(updatedIssue.getAssignee().getMemberId());
+            assigneeRequest.setUserName(updatedIssue.getAssignee().getUser().getUserName());
+            responseDTO.setAssignee(assigneeRequest);
+
+            responseDTO.setIssueTitle(updatedIssue.getIssueTitle());
+            responseDTO.setIssueDescription(updatedIssue.getIssueDescription());
+            responseDTO.setStatus(updatedIssue.getStatus());
+            responseDTO.setStartDate(updatedIssue.getStartDate());
+            responseDTO.setEndDate(updatedIssue.getEndDate());
+
+            return responseDTO;
+        } else {
+            throw new NotFoundException("해당하는 이슈가 없습니다.");
+        }
+    }
+
+    public CreateIssueRequest updateIssueStartDate(UUID issueId, UpdateIssueStartDateRequest updateIssueStartDateDTO ) {
+        Optional<Issue> existingIssueOptional = issueRepository.findById(issueId);
+
+        if (existingIssueOptional.isPresent()) {
+            Issue existingIssue = existingIssueOptional.get();
+            existingIssue.setStartDate(updateIssueStartDateDTO.getStartDate());
+            Issue updatedIssue = issueRepository.save(existingIssue);
+
+            CreateIssueRequest responseDTO = new CreateIssueRequest();
+
+            AssigneeRequest assigneeRequest = new AssigneeRequest();
+            assigneeRequest.setAssigneeId(updatedIssue.getAssignee().getMemberId());
+            assigneeRequest.setUserName(updatedIssue.getAssignee().getUser().getUserName());
+            responseDTO.setAssignee(assigneeRequest);
+
+            responseDTO.setIssueTitle(updatedIssue.getIssueTitle());
+            responseDTO.setIssueDescription(updatedIssue.getIssueDescription());
+            responseDTO.setStatus(updatedIssue.getStatus());
+            responseDTO.setStartDate(updatedIssue.getStartDate());
+            responseDTO.setEndDate(updatedIssue.getEndDate());
+
+            return responseDTO;
+        } else {
+            throw new NotFoundException("해당하는 이슈가 없습니다.");
+        }
+    }
+
+    public CreateIssueRequest updateIssueEndDate(UUID issueId, UpdateIssueEndDateRequest updateIssueEndDateDTO ) {
+        Optional<Issue> existingIssueOptional = issueRepository.findById(issueId);
+
+        if (existingIssueOptional.isPresent()) {
+            Issue existingIssue = existingIssueOptional.get();
+            existingIssue.setEndDate(updateIssueEndDateDTO.getEndDate());
+            Issue updatedIssue = issueRepository.save(existingIssue);
+
+            CreateIssueRequest responseDTO = new CreateIssueRequest();
+
+            AssigneeRequest assigneeRequest = new AssigneeRequest();
+            assigneeRequest.setAssigneeId(updatedIssue.getAssignee().getMemberId());
+            assigneeRequest.setUserName(updatedIssue.getAssignee().getUser().getUserName());
+            responseDTO.setAssignee(assigneeRequest);
+
+            responseDTO.setIssueTitle(updatedIssue.getIssueTitle());
+            responseDTO.setIssueDescription(updatedIssue.getIssueDescription());
+            responseDTO.setStatus(updatedIssue.getStatus());
+            responseDTO.setStartDate(updatedIssue.getStartDate());
+            responseDTO.setEndDate(updatedIssue.getEndDate());
+
+            return responseDTO;
+        } else {
+            throw new NotFoundException("해당하는 이슈가 없습니다.");
+        }
+    }
+
 }
