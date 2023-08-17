@@ -22,7 +22,7 @@ public class DocumentController {
 
     @Autowired
     public DocumentController(DocumentService documentService) {
-            this.documentService = documentService;
+        this.documentService = documentService;
     }
 
     @Operation(summary = "기술문서 생성", description = "기술문서를 생성합니다.")
@@ -73,4 +73,9 @@ public class DocumentController {
         return updated&&documentFiles;
     }
 
+    @Operation(summary = "기술문서 검색", description = "keyword로 기술문서를 검색합니다.")
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<getAllDocumentRequest>> searchDocuments(@PathVariable UUID projectId, @PathVariable String keyword){
+        return ResponseEntity.ok(documentService.searchDocuments(projectId, keyword));
+    }
 }
