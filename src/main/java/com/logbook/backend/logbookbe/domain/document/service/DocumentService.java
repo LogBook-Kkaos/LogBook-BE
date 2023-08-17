@@ -170,4 +170,25 @@ public class DocumentService {
             throw new RuntimeException("잘못된 document입니다.");
         }
     }
+    public List<getAllDocumentRequest> searchDocuments(UUID projectId, String searchString){
+
+        List<Document> documents = documentRepository.findByProjectProjectIdAndDocumentTitleContaining(projectId, searchString);
+        List<getAllDocumentRequest> documentDTOs = new ArrayList<>();
+        for (Document document : documents) {
+            getAllDocumentRequest documentDTO = new getAllDocumentRequest();
+            documentDTO.setDocumentId(document.getDocumentId());
+            documentDTO.setDocumentTitle(document.getDocumentTitle());
+            documentDTO.setCreationDate(document.getCreationDate());
+
+            List<DocumentFile> documentFiles = document.getDocumentFiles();
+            if (!documentFiles.isEmpty()) {
+                DocumentFile firstDocumentFile = documentFiles.get(0);
+                documentDTO.setImageUrl(firstDocumentFile.getImageUrl());
+            }
+            documentDTOs.add(documentDTO);
+        }
+        return documentDTOs;
+
+    }
+
 }

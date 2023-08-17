@@ -1,5 +1,6 @@
 package com.logbook.backend.logbookbe.domain.document.repository;
 
+import com.logbook.backend.logbookbe.domain.document.dto.getAllDocumentRequest;
 import com.logbook.backend.logbookbe.domain.document.model.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,4 +12,6 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     List<Document> findByProjectProjectId(UUID projectId);
 
     Optional<Document> findByDocumentId(UUID documentId);
+
+    List<Document> findByProjectProjectIdAndDocumentTitleContaining(UUID projectId,String searchString);
 }

@@ -38,38 +38,7 @@ public class ReleaseNoteService {
         List<GetReleaseNoteResponse> releaseNoteDTOs = new ArrayList<>();
 
         for (ReleaseNote releaseNote : releaseNotes) {
-            GetReleaseNoteResponse releaseNoteDTO = new GetReleaseNoteResponse();
-            releaseNoteDTO.setReleaseNoteId(releaseNote.getReleaseNoteId());
-
-            Member creator = releaseNote.getCreator();
-            CreatorRequest creatorDTO = new CreatorRequest();
-            creatorDTO.setCreatorId(creator.getMemberId());
-
-            User user = creator.getUser();
-            String username = user.getUserName();
-            creatorDTO.setUserName(username);
-
-            releaseNoteDTO.setCreator(creatorDTO);
-
-            releaseNoteDTO.setReleaseTitle(releaseNote.getReleaseTitle());
-            releaseNoteDTO.setVersion(releaseNote.getVersion());
-            releaseNoteDTO.setCreationDate(releaseNote.getCreationDate());
-            releaseNoteDTO.setImportant(releaseNote.isImportant());
-            releaseNoteDTO.setPublic(releaseNote.isPublic());
-
-            List<ReleaseContent> releaseContents = releaseContentRepository.findByReleaseNoteReleaseNoteId(releaseNote.getReleaseNoteId());
-            List<ReleaseContentRequest> releaseContentDTOs = new ArrayList<>();
-
-            for (ReleaseContent releaseContent : releaseContents) {
-                ReleaseContentRequest releaseContentDTO = new ReleaseContentRequest();
-                releaseContentDTO.setReleaseSummary(releaseContent.getReleaseSummary());
-                releaseContentDTO.setCategory(releaseContent.getCategory());
-                releaseContentDTO.setDocumentLink(releaseContent.getDocumentLink());
-
-                releaseContentDTOs.add(releaseContentDTO);
-            }
-
-            releaseNoteDTO.setReleaseContents(releaseContentDTOs);
+            GetReleaseNoteResponse releaseNoteDTO = createReleaseNoteDTO(releaseNote);
 
             releaseNoteDTOs.add(releaseNoteDTO);
         }
@@ -193,6 +162,69 @@ public class ReleaseNoteService {
     public DeleteReleaseNoteResponse deleteReleaseNote(UUID releaseNoteId) {
         releaseNoteRepository.deleteById(releaseNoteId);
         return new DeleteReleaseNoteResponse(releaseNoteId, "이슈가 성공적으로 삭제되었습니다.");
+    }
+
+    public List<GetReleaseNoteResponse> searchReleaseNotes(UUID projectId, String keyword){
+        List<ReleaseNote> releaseNotes = releaseNoteRepository.findByProjectProjectId((projectId));
+
+        List<GetReleaseNoteResponse> searchedReleaseNotes = new ArrayList<>();
+
+        for (ReleaseNote releaseNote : releaseNotes) {
+            if(releaseNote.getReleaseTitle().contains(keyword)){
+                GetReleaseNoteResponse releaseNoteDTO = createReleaseNoteDTO(releaseNote);
+                searchedReleaseNotes.add(releaseNoteDTO);
+            }else{
+                Member creator = releaseNote.getCreator();
+                String creatorUsername = creator.getUser().getUserName();
+                if(creatorUsername.contains(keyword)){
+                    GetReleaseNoteResponse releaseNoteDTO = createReleaseNoteDTO(releaseNote);
+                    searchedReleaseNotes.add(releaseNoteDTO);
+                }
+            }
+        }
+        return searchedReleaseNotes;
+    }
+
+    private GetReleaseNoteResponse createReleaseNoteDTO(ReleaseNote releaseNote) {
+
+
+        GetReleaseNoteResponse releaseNoteDTO = new GetReleaseNoteResponse();
+        releaseNoteDTO.setReleaseNoteId(releaseNote.getReleaseNoteId());
+
+        Member creator = releaseNote.getCreator();
+        CreatorRequest creatorDTO = new CreatorRequest();
+        creatorDTO.setCreatorId(creator.getMemberId());
+
+        User user = creator.getUser();
+        String username = user.getUserName();
+        creatorDTO.setUserName(username);
+
+        releaseNoteDTO.setCreator(creatorDTO);
+
+        releaseNoteDTO.setReleaseTitle(releaseNote.getReleaseTitle());
+        releaseNoteDTO.setVersion(releaseNote.getVersion());
+        releaseNoteDTO.setCreationDate(releaseNote.getCreationDate());
+        releaseNoteDTO.setImportant(releaseNote.isImportant());
+        releaseNoteDTO.setPublic(releaseNote.isPublic());
+
+        List<ReleaseContent> releaseContents = releaseContentRepository.findByReleaseNoteReleaseNoteId(releaseNote.getReleaseNoteId());
+        List<ReleaseContentRequest> releaseContentDTOs = new ArrayList<>();
+
+        for (ReleaseContent releaseContent : releaseContents) {
+            ReleaseContentRequest releaseContentDTO = new ReleaseContentRequest();
+            releaseContentDTO.setReleaseSummary(releaseContent.getReleaseSummary());
+            releaseContentDTO.setCategory(releaseContent.getCategory());
+            releaseContentDTO.setDocumentLink(releaseContent.getDocumentLink());
+
+            releaseContentDTOs.add(releaseContentDTO);
+        }
+
+
+        releaseNoteDTO.setReleaseContents(releaseContentDTOs);
+
+
+
+        return releaseNoteDTO;
     }
 
 }

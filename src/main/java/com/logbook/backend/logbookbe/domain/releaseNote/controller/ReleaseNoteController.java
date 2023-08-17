@@ -81,12 +81,19 @@ public class ReleaseNoteController {
         return releaseNoteService.deleteReleaseNote(releaseNoteId);
     }
 
+
+    @Operation(summary = "릴리즈 노트 검색", description = "keyword로 릴리즈 노트를 검색합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = GetReleaseNoteResponse.class))}),
+    })
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<GetReleaseNoteResponse>> searchReleaseNotes(@PathVariable UUID projectId, @PathVariable String keyword) {
+        List<GetReleaseNoteResponse> getAllReleaseNotes = releaseNoteService.searchReleaseNotes(projectId, keyword);
+        return ResponseEntity.ok(getAllReleaseNotes);
+    }
+
     // ** TODO ** //
 
-//    @GetMapping("/search")
-//    public List<ReleaseNote> searchReleaseNotes(/* 검색 파라미터 */) {
-//        return releaseNoteService.searchReleaseNotes(/* 검색 파라미터 전달 */);
-//    }
 //
 //    @GetMapping("/filter")
 //    public List<ReleaseNote> filterReleaseNotes(/* 필터링 파라미터 */) {
